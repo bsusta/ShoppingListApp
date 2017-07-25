@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import {
   Container,
   Header,
@@ -23,6 +23,7 @@ class Login extends Component {
   render() {
     return (
       <Container>
+            <StatusBar barStyle="light-content" />
               <Content>
                 <Header>
                   <Body>

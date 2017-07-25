@@ -53,69 +53,50 @@ const datas = [
 ];
 
 class SideBar extends Component {
-
-  constructor(props) {
+	constructor(props) {
 		super(props);
 		this.state = {
 			shadowOffsetWidth: 1,
-			shadowRadius: 4,
+			shadowRadius: 4,s
 		};
 	}
 
-
-  render() {
-    return (
-      <Container>
-      				<Content bounces={false} style={{ flex: 1, backgroundColor: "#fff", top: -1 }}>
-              <Header>
-                <Body>
-                  <Title>ShoppingList</Title>
-                </Body>
-                <Right />
-              </Header>
-                <List
-      						dataArray={datas}
-      						renderRow={data =>
-      							<ListItem button noBorder onPress={() => this.props.navigation.navigate(data.route)}>
-      								<Left>
-      									<Icon active name={data.icon} style={{ color: "#777", fontSize: 26, width: 30 }} />
-      									<Text style={styles.text}>
-      										{data.name}
-      									</Text>
-      								</Left>
-      								{data.types &&
-      									<Right style={{ flex: 1 }}>
-      										<Badge
-      											style={{
-      												borderRadius: 3,
-      												height: 25,
-      												width: 72,
-      												backgroundColor: data.bg,
-      											}}
-      										>
-      											<Text style={styles.badgeText}>{`${data.types} Types`}</Text>
-      										</Badge>
-      									</Right>}
-      							</ListItem>}
-      					/>
-      				</Content>
-      			</Container>
-    );
-  }
+	render() {
+		return (
+			<Container>
+				<Content bounces={false} style={{ flex: 1, backgroundColor: "#fff", top: -1 }}>
+					<Image source={drawerCover} style={styles.drawerCover}>
+						<Image square style={styles.drawerImage} source={drawerImage} />
+					</Image>
+					<List
+						dataArray={datas}
+						renderRow={data =>
+							<ListItem button noBorder onPress={() => this.props.navigation.navigate(data.route)}>
+								<Left>
+									<Icon active name={data.icon} style={{ color: "#777", fontSize: 26, width: 30 }} />
+									<Text style={styles.text}>
+										{data.name}
+									</Text>
+								</Left>
+								{data.types &&
+									<Right style={{ flex: 1 }}>
+										<Badge
+											style={{
+												borderRadius: 3,
+												height: 25,
+												width: 72,
+												backgroundColor: data.bg,
+											}}
+										>
+											<Text style={styles.badgeText}>{`${data.types} Types`}</Text>
+										</Badge>
+									</Right>}
+							</ListItem>}
+					/>
+				</Content>
+			</Container>
+		);
+	}
 }
 
-function bindAction(dispatch) {
-  return {
-    navigateTo: (route, homeRoute) => dispatch(navigateTo(route, homeRoute)),
-    closeDrawer: () => dispatch(closeDrawer()),
-    changePlatform: () => dispatch(changePlatform()),
-    changeMaterial: () => dispatch(changeMaterial()),
-  };
-}
-
-const mapStateToProps = state => ({
-  navigation: state.cardNavigation,
-  themeState: state.drawer.themeState,
-});
-
-export default connect(mapStateToProps, bindAction)(SideBar);
+export default SideBar;

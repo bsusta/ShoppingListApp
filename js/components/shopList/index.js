@@ -59,11 +59,10 @@ class ShopList extends Component {
       <Container style={styles.container}>
         <Header>
           <Left>
-            <Button transparent onPress={() => this.props.navigation.goBack()}>
-              <Icon name="arrow-back" />
-            </Button>
+          <Button transparent onPress={() => this.props.navigation.navigate('DrawerOpen')}>
+            <Icon name="menu" />
+          </Button>
           </Left>
-
           <Body>
             <Title>List Thumbnail</Title>
           </Body>
@@ -76,7 +75,7 @@ class ShopList extends Component {
             renderRow={data =>
               <ListItem thumbnail>
                 <Left>
-          
+
                 </Left>
                 <Body>
                   <Text>{data.text}</Text>
