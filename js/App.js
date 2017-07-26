@@ -5,6 +5,10 @@ import React from "react";
 import { Platform } from "react-native";
 import { Root } from "native-base";
 import { StackNavigator } from "react-navigation";
+import { ApolloProvider } from 'react-apollo';
+
+import createStore from './apollo/';
+import client from './apollo/client';
 
 import Drawer from "./Drawer";
 import Login from "./components/login/";
@@ -43,7 +47,13 @@ const AppNavigator = StackNavigator(
     }
 );
 
-export default () =>
-    <Root>
-        <AppNavigator />
-    </Root>;
+export default() => {
+  const store = createStore(client);
+  return (
+    <ApolloProvider client={client} store={store}>
+      <Root>
+        <AppNavigator/>
+      </Root>
+    </ApolloProvider>
+  );
+}

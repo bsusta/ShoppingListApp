@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { View, StatusBar } from 'react-native';
+import { View,ActivityIndicator } from 'react-native';
+import { withApollo,graphql } from 'react-apollo';
 import {
   Container,
   Header,
@@ -20,6 +21,31 @@ import {
 import styles from "./styles";
 
 class Login extends Component {
+
+  constructor (props) {
+    super(props);
+    this.state = {
+      userName:'',
+      password:'',
+      loading:false,
+    }
+  }
+
+  async submit() {
+    this.setState(
+    {loading:true}
+      );
+    let email=this.state.userName;
+    let password = this.state.password;
+    let client = this.props.client;
+
+    client.mutate({
+      mutation: loginUser,
+      variables: { email, password }
+    });
+
+  }
+
   render() {
     return (
       <Container>
@@ -33,11 +59,20 @@ class Login extends Component {
                 <Form>
                   <Item inlineLabel>
                     <Label>Username</Label>
-                    <Input />
+                    <Input
+                      label="Username"
+                      value={this.state.userName}
+                      onChangeText={(value)=>this.setState({userName:value})}
+                      />
                   </Item>
                   <Item inlineLabel last>
                     <Label>Password</Label>
-                    <Input />
+                      <Input
+                        label="Password"
+                        value={this.state.password}
+                        onChangeText={(value)=>this.setState({password:value})}
+                        secureTextEntry={true}
+                        />
                   </Item>
                 </Form>
                 <View style={{ marginBottom: 80, marginTop: 20 }}>
@@ -45,9 +80,16 @@ class Login extends Component {
                     block
                     primary
                     style={styles.mb15}
-                    onPress={() => this.props.navigation.navigate('ItemList')}
+                    onPress={() => this.submit.bind(this)}
+                    disabled={this.state.loading}
                   >
-                    <Text>Login</Text>
+                  {
+                    this.state.loading?
+                    <ActivityIndicator
+                      animating size={ 'large' }
+                      color='#007299' /> :
+                      <Text>Login</Text>
+                    }
                   </Button>
                 </View>
               </Content>
@@ -56,4 +98,6 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default withApollo(Login);
+
+//this.props.navigation.navigate('ItemList')

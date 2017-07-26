@@ -130,3 +130,10 @@ js
 - assets
 - components
 - themes
+
+### Login graph.cool
+
+$ npm install --save apollo-client
+$ npm install --save graphql-tag
+$ npm install --save react-apollo
+$ npm install --save subscriptions-transport-ws
