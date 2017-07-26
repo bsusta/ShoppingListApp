@@ -6,11 +6,13 @@ import { DrawerNavigator } from "react-navigation";
 import Login from "./components/login/";
 import ItemList from "./components/itemList/";
 import SideBar from "./components/sidebar/";
+import SettingsList from "./components/settingsList/";
 
 const DrawerExample = DrawerNavigator(
   {
     ItemList: { screen: ItemList },
     Login: { screen: Login },
+    SettingsList: { screen: SettingsList },
   },
   {
     initialRouteName: "Login",

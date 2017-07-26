@@ -16,6 +16,11 @@ import {
 	StyleProvider,
 	getTheme,
 	variables,
+	Header,
+	HeaderTab,
+	Body,
+	Title,
+	Separator,
 } from "native-base";
 
 import styles from "./styles";
@@ -64,6 +69,18 @@ class SideBar extends Component {
 	render() {
 		return (
 			<Container>
+				<Header>
+					<Body>
+						<Title>Shops list</Title>
+					</Body>
+					<Right>
+						<Button transparent onPress={() => this.props.navigation.navigate('SettingsList')}>
+								<Icon name="settings" />
+							</Button>
+					</Right>
+
+				</Header>
+
 				<Content bounces={false} style={{ flex: 1, backgroundColor: "#fff", top: -1 }}>
 					<List
 						dataArray={datas}
@@ -90,6 +107,31 @@ class SideBar extends Component {
 									</Right>}
 							</ListItem>}
 					/>
+					<Separator bordered>
+						<Text>Settings</Text>
+					</Separator>
+					<ListItem  icon button onPress={() => this.props.navigation.navigate('ShopsList')}>
+						<Left>
+							<Icon name="barcode" />
+						</Left>
+						<Body>
+							<Text>Shops</Text>
+						</Body>
+						<Right>
+							<Icon name="arrow-forward" />
+						</Right>
+					</ListItem>
+					<ListItem icon button onPress={() => this.props.navigation.navigate('UsersList')}>
+						<Left>
+							<Icon name="person" />
+						</Left>
+						<Body>
+							<Text>Users</Text>
+						</Body>
+						<Right>
+							<Icon name="arrow-forward" />
+						</Right>
+					</ListItem>
 				</Content>
 			</Container>
 		);
