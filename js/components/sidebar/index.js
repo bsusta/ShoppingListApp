@@ -66,74 +66,77 @@ class SideBar extends Component {
 		};
 	}
 
-	render() {
-		return (
-			<Container>
-				<Header>
-					<Body>
-						<Title>Shops list</Title>
-					</Body>
-					<Right>
-						<Button transparent onPress={() => this.props.navigation.navigate('SettingsList')}>
-								<Icon name="settings" />
-							</Button>
-					</Right>
+render() {
+  return (
+    <Container>
+      <Header>
+        <Body>
+          <Title>Shops list</Title>
+        </Body>
+        <Right>
+          <Button transparent onPress={() => this.props.navigation.navigate('SettingsList')}>
+            <Icon name="settings"/>
+          </Button>
+        </Right>
 
-				</Header>
+      </Header>
 
-				<Content bounces={false} style={{ flex: 1, backgroundColor: "#fff", top: -1 }}>
-					<List
-						dataArray={datas}
-						renderRow={data =>
-							<ListItem button noBorder onPress={() => this.props.navigation.navigate(data.route)}>
-								<Left>
-									<Icon active name={data.icon} style={{ color: "#777", fontSize: 26, width: 30 }} />
-									<Text style={styles.text}>
-										{data.name}
-									</Text>
-								</Left>
-								{data.types &&
-									<Right style={{ flex: 1 }}>
-										<Badge
-											style={{
-												borderRadius: 3,
-												height: 25,
-												width: 72,
-												backgroundColor: data.bg,
-											}}
-										>
-											<Text style={styles.badgeText}>{data.types}</Text>
-										</Badge>
-									</Right>}
-							</ListItem>}
-					/>
-					<Separator bordered>
-						<Text>Settings</Text>
-					</Separator>
-					<ListItem  icon button onPress={() => this.props.navigation.navigate('ShopsList')}>
-						<Left>
-							<Icon name="barcode" />
-						</Left>
-						<Body>
-							<Text>Shops</Text>
-						</Body>
-						<Right>
-							<Icon name="arrow-forward" />
-						</Right>
-					</ListItem>
-					<ListItem icon button onPress={() => this.props.navigation.navigate('UsersList')}>
-						<Left>
-							<Icon name="person" />
-						</Left>
-						<Body>
-							<Text>Users</Text>
-						</Body>
-						<Right>
-							<Icon name="arrow-forward" />
-						</Right>
-					</ListItem>
-				</Content>
-			</Container>
+      <Content bounces={false} style={{
+        flex: 1,
+        backgroundColor: "#fff",
+        top: -1
+      }}>
+        <List dataArray={datas} renderRow={data => <ListItem button noBorder onPress={() => this.props.navigation.navigate(data.route)}>
+          <Left>
+            <Icon active name={data.icon} style={{
+              color: "#777",
+              fontSize: 26,
+              width: 30
+            }}/>
+            <Text style={styles.text}>
+              {data.name}
+            </Text>
+          </Left>
+          {data.types && <Right style={{
+            flex: 1
+          }}>
+            <Badge style={{
+              borderRadius: 3,
+              height: 25,
+              width: 72,
+              backgroundColor: data.bg
+            }}>
+              <Text style={styles.badgeText}>{data.types}</Text>
+            </Badge>
+          </Right>}
+        </ListItem>}/>
+        <Separator bordered>
+          <Text>Settings</Text>
+        </Separator>
+        <ListItem icon button onPress={() => this.props.navigation.navigate('ShopsList')}>
+          <Left>
+            <Icon name="barcode"/>
+          </Left>
+          <Body>
+            <Text>Shops</Text>
+          </Body>
+          <Right>
+            <Icon name="arrow-forward"/>
+          </Right>
+        </ListItem>
+        <ListItem icon button onPress={() => this.props.navigation.navigate('UsersList')}>
+          <Left>
+            <Icon name="person"/>
+          </Left>
+          <Body>
+            <Text>Users</Text>
+          </Body>
+          <Right>
+            <Icon name="arrow-forward"/>
+          </Right>
+        </ListItem>
+      </Content>
+    </Container>
 		);
 	}
 }
