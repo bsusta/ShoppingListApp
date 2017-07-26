@@ -45,7 +45,7 @@ class Login extends Component {
                     block
                     primary
                     style={styles.mb15}
-                    onPress={() => this.props.navigation.navigate('ShopList')}
+                    onPress={() => this.props.navigation.navigate('ItemList')}
                   >
                     <Text>Login</Text>
                   </Button>

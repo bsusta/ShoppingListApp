@@ -4,15 +4,16 @@ import React from "react";
 import { DrawerNavigator } from "react-navigation";
 
 import Login from "./components/login/";
-import ShopList from "./components/shopList/";
+import ItemList from "./components/itemList/";
 import SideBar from "./components/sidebar/";
 
 const DrawerExample = DrawerNavigator(
   {
-    ShopList: { screen: ShopList },
+    ItemList: { screen: ItemList },
+    Login: { screen: Login },
   },
   {
-    initialRouteName: "ShopList",
+    initialRouteName: "Login",
     contentOptions: {
       activeTintColor: "#e91e63"
     },

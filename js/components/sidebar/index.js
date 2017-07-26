@@ -57,7 +57,7 @@ class SideBar extends Component {
 		super(props);
 		this.state = {
 			shadowOffsetWidth: 1,
-			shadowRadius: 4,s
+			shadowRadius: 4,
 		};
 	}
 
@@ -65,9 +65,6 @@ class SideBar extends Component {
 		return (
 			<Container>
 				<Content bounces={false} style={{ flex: 1, backgroundColor: "#fff", top: -1 }}>
-					<Image source={drawerCover} style={styles.drawerCover}>
-						<Image square style={styles.drawerImage} source={drawerImage} />
-					</Image>
 					<List
 						dataArray={datas}
 						renderRow={data =>
@@ -88,7 +85,7 @@ class SideBar extends Component {
 												backgroundColor: data.bg,
 											}}
 										>
-											<Text style={styles.badgeText}>{`${data.types} Types`}</Text>
+											<Text style={styles.badgeText}>{data.types}</Text>
 										</Badge>
 									</Right>}
 							</ListItem>}

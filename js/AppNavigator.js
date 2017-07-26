@@ -7,7 +7,7 @@ import material from "../native-base-theme/variables/material";
 import platform from "../native-base-theme/variables/platform";
 
 import Login from "./components/login/";
-import ShopList from "./components/shopList/";
+import ItemList from "./components/itemList/";
 import SideBar from "./components/sidebar";
 
 
