@@ -1,5 +1,6 @@
 const initialState = {
-  userId: null,
+    userId: null,
+    token:null
 };
 
 export const SUBMIT_ID = 'submit id';
@@ -9,7 +10,8 @@ export default function userId (state = initialState, action){
     case SUBMIT_ID:
       return {
         ...state,
-        userId: action.userId,
+          userId: action.userId,
+          token: action.token,
       }
     default:
       return state;

@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { graphql, withApollo } from "react-apollo";
+import {items, updateItem} from "./query";
 
 import {
   Container,
@@ -18,11 +20,19 @@ import {
   View
 } from "native-base";
 
-import {TouchableHighlight} from "react-native";
+import {ActivityIndicator,TouchableHighlight} from "react-native";
 
 import styles from "./styles";
 
-
+const withItems = graphql(items, {
+    props: ({ data: { loading, allItems, error, refetch, subscribeToMore } }) => ({
+        loadingItems: loading,
+        items: allItems,
+        itemsError: error,
+        refetchItems:refetch,
+        subscribeToMoreItems:subscribeToMore,
+    }),
+});
 
 const datas = [
   {
@@ -58,7 +68,14 @@ const datas = [
 ];
 
 class ItemList extends Component {
+
   render() {
+    if(this.props.loadingItems){
+      return (<ActivityIndicator
+          animating size={'large'}
+          color='#007299'/>);
+    }
+    console.log(this.props);
     return (
       <Container style={styles.container}>
         <Header>
@@ -82,7 +99,7 @@ class ItemList extends Component {
 
         <Content>
           <List
-            dataArray={datas}
+            dataArray={this.props.items}
             renderRow={data =>
               <ListItem thumbnail>
                 <Left>
@@ -91,15 +108,26 @@ class ItemList extends Component {
                 <Body>
                   <TouchableHighlight transparent onPress={() => this.props.navigation.navigate('EditItem')}>
                     <View>
-                      <Text>{data.itemName}</Text>
-                      <Text numberOfLines={1} note>Amount: {data.amount}</Text>
-                      <Text numberOfLines={1} note>Price/stock: {data.price}</Text>
+                      <Text>{data.name}</Text>
+                      <Text numberOfLines={1} note>Quantity: {data.quantity}</Text>
+                      <Text numberOfLines={1} note>Price/stock: {data.priceQuantity}</Text>
                     </View>
                 </TouchableHighlight>
                 </Body>
                 <Right>
                   <Button transparent block>
-                    <CheckBox checked={false} />
+                    <CheckBox checked={data.done}
+                              onPress={
+                                  ()=>{
+                                    let done=!data.done;
+                                    console.log(done);
+                                      this.props.client.mutate({
+                                          mutation: updateItem,
+                                          variables: {done,id:data.id},
+                                      });
+                                  }
+                              }
+                    />
                   </Button>
                 </Right>
               </ListItem>}
@@ -110,4 +138,4 @@ class ItemList extends Component {
   }
 }
 
-export default ItemList;
+export default withApollo(withItems(ItemList));

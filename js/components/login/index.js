@@ -1,6 +1,11 @@
 import React, {Component} from "react";
 import {View, ActivityIndicator, StatusBar} from 'react-native';
 import {withApollo, graphql} from 'react-apollo';
+import { connect } from 'react-redux';
+import { addTokenToUse } from './../../tokens/tokenHandling';
+
+
+import {SUBMIT_ID} from './../../apollo/userId';
 import {
     Container,
     Header,
@@ -33,7 +38,6 @@ class Login extends Component {
     }
 
     async submit() {
-        console.log("submit funkcia start");
         this.setState(
             {loading: true}
         );
@@ -44,9 +48,18 @@ class Login extends Component {
         client.mutate({
             mutation: loginUser,
             variables: {email, password}
-        }).then((userData)=>console.log(userData));
+        }).then((userData)=>{
+            addTokenToUse(client,userData.data.signinUser.token);
+            this.props.saveUser(userData.data.signinUser.token,userData.data.signinUser.user.id);
+            this.setState({
+                    loading: false
+                }
+            );
+            this.props.navigation.navigate('ItemList');
+        }
 
-        /*this.props.navigation.navigate('ItemList')*/
+        );
+
 
     }
 
@@ -102,6 +115,15 @@ class Login extends Component {
     }
 }
 
-export default withApollo(Login);
+function bindActions(dispatch) {
+    return {
+        saveUser: (userId,token) => dispatch({type:SUBMIT_ID,userId:userId,token:token}),
+    };
+}
+
+const mapStateToProps = state => ({
+});
+
+export default withApollo((connect(mapStateToProps, bindActions)(Login)));
 
 
