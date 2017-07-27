@@ -1,12 +1,12 @@
 import ApolloClient, { addTypename, createNetworkInterface } from 'apollo-client';
 import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 
-const wsClient = new SubscriptionClient('wss://subscriptions.graph.cool/v1/cj5l038t8lybv0134z2qfs5kf', {
-  reconnect: true,
+const wsClient = new SubscriptionClient('wss://subscriptions.graph.cool/v1/cj181bsf22crn0189q8au5ijj', {
+    reconnect: true,
 });
 
 const networkInterface = createNetworkInterface({
-  uri: 'https://api.graph.cool/simple/v1/cj5l038t8lybv0134z2qfs5kf',
+    uri: 'https://api.graph.cool/simple/v1/cj181bsf22crn0189q8au5ijj',
 });
 
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
