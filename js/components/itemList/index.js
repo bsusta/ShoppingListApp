@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { graphql, withApollo } from "react-apollo";
-import {items, updateItem} from "./query";
+import {items, updateItemDone, itemsSubscription} from "./query";
 
 import {
   Container,
@@ -34,40 +34,37 @@ const withItems = graphql(items, {
     }),
 });
 
-const datas = [
-  {
-    itemName: "Chleba",
-    amount: "1",
-    price: "5"
-  },
-  {
-    itemName: "Chleba",
-    amount: "1",
-    price: "5"
-  },
-  {
-    itemName: "Chleba",
-    amount: "1",
-    price: "5"
-  },
-  {
-    itemName: "Chleba",
-    amount: "1",
-    price: "5"
-  },
-  {
-    itemName: "Chleba",
-    amount: "1",
-    price: "5"
-  },
-  {
-    itemName: "Chleba",
-    amount: "1",
-    price: "5"
-  }
-];
-
 class ItemList extends Component {
+
+  componentWillMount(){
+    this.props.subscribeToMoreItems({
+      document: itemsSubscription,
+      updateQuery: (prev, recieved) => {
+        switch (recieved.subscriptionData.data.Item.mutation) {
+          case "DELETED":
+            {
+              console.log(recieved);
+              let newItems=[...prev.allItems];
+              newItems.splice(prev.allItems.findIndex((element)=>element.id==recieved.subscriptionData.data.Item.previousValues.id),1);
+              return Object.assign({},prev,{allItems:newItems});
+              break;
+            }
+          case "CREATED":
+            return Object.assign({},prev,{allItems:[...prev.allItems,recieved.subscriptionData.data.Item.node]});
+            break;
+          case "UPDATED":
+            {
+              let newItems=[...prev.allItems];
+              newItems[newItems.findIndex((element)=>element.id==recieved.subscriptionData.data.Item.node.id)]=recieved.subscriptionData.data.Item.node;
+              return Object.assign({},prev,{allItems:newItems});
+              break;
+            }
+          default:
+            return prev;
+          }
+      },
+    });
+  }
 
   render() {
     if(this.props.loadingItems){
@@ -75,7 +72,6 @@ class ItemList extends Component {
           animating size={'large'}
           color='#007299'/>);
     }
-    console.log(this.props);
     return (
       <Container style={styles.container}>
         <Header>
@@ -100,7 +96,7 @@ class ItemList extends Component {
         <Content>
           <List
             dataArray={this.props.items}
-            renderRow={data =>
+            renderRow={item =>
               <ListItem thumbnail>
                 <Left>
 
@@ -108,22 +104,59 @@ class ItemList extends Component {
                 <Body>
                   <TouchableHighlight transparent onPress={() => this.props.navigation.navigate('EditItem')}>
                     <View>
-                      <Text>{data.name}</Text>
-                      <Text numberOfLines={1} note>Quantity: {data.quantity}</Text>
-                      <Text numberOfLines={1} note>Price/stock: {data.priceQuantity}</Text>
+                      <Text>{item.name}</Text>
+                      <Text numberOfLines={1} note>Quantity: {item.quantity}</Text>
+                      <Text numberOfLines={1} note>Price/stock: {item.priceQuantity}</Text>
                     </View>
                 </TouchableHighlight>
                 </Body>
                 <Right>
-                  <Button transparent block>
-                    <CheckBox checked={data.done}
+                  <Button transparent block
+                  onPress={
+                      ()=>{
+                        let newDone=!item.done;
+                        this.props.client.mutate({
+                          mutation: updateItemDone,
+                          variables: {
+                            done:newDone,id:item.id
+                          },
+                          optimisticResponse: {
+                            updateItem:{
+                              done: newDone,
+                              __typename:'Item'
+                            }
+                          },
+                          update: (proxy, { data: { updateItem } }) => {
+                            let data = proxy.readQuery({ query: items });
+                            let index = data.allItems.findIndex((element)=>element.id==item.id);
+                            data.allItems[index].done=updateItem.done;
+                            proxy.writeQuery({ query: items, data });
+                          },
+                          });
+                      }
+                  }
+                  >
+                    <CheckBox checked={item.done}
                               onPress={
                                   ()=>{
-                                    let done=!data.done;
-                                    console.log(done);
-                                      this.props.client.mutate({
-                                          mutation: updateItem,
-                                          variables: {done,id:data.id},
+                                    let newDone=!item.done;
+                                    this.props.client.mutate({
+                                      mutation: updateItemDone,
+                                      variables: {
+                                        done:newDone,id:item.id
+                                      },
+                                      optimisticResponse: {
+                                        updateItem:{
+                                          done: newDone,
+                                          __typename:'Item'
+                                        }
+                                      },
+                                      update: (proxy, { data: { updateItem } }) => {
+                                        let data = proxy.readQuery({ query: items });
+                                        let index = data.allItems.findIndex((element)=>element.id==item.id);
+                                        data.allItems[index].done=updateItem.done;
+                                        proxy.writeQuery({ query: items, data });
+                                      },
                                       });
                                   }
                               }

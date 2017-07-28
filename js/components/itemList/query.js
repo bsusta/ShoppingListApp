@@ -13,13 +13,35 @@ export const items = gql`
 	 }
   }
 `;
-export const updateItem = gql`
+export const updateItemDone = gql`
 	mutation updateItem($id: ID!,$done:Boolean!) {
 		updateItem(
 			id:$id
 			done:$done
-		) {
-			id
+		)
+    {
+			done
+		}
+	}
+`;
+
+export const itemsSubscription = gql`
+	subscription {
+		Item(filter: {mutation_in: [CREATED,UPDATED,DELETED]}) {
+			mutation
+			node {
+        id
+    		key:id
+    		createdAt
+    		done
+    		name
+    		note
+    		priceQuantity
+    		quantity
+			}
+      previousValues{
+        id
+      }
 		}
 	}
 `;
