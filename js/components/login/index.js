@@ -55,7 +55,7 @@ class Login extends Component {
                     loading: false
                 }
             );
-            this.props.navigation.navigate('ItemList');
+            this.props.navigation.navigate('ItemList',{id:'all'});
         }
 
         );
@@ -125,5 +125,3 @@ const mapStateToProps = state => ({
 });
 
 export default withApollo((connect(mapStateToProps, bindActions)(Login)));
-
-

@@ -52,7 +52,7 @@ export default() => {
   return (
     <ApolloProvider client={client} store={store}>
       <Root>
-        <AppNavigator/>
+        <AppNavigator onNavigationStateChange={null}/>
       </Root>
     </ApolloProvider>
   );

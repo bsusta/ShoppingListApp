@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-export const items = gql`
+export const itemsAll = gql`
   query allItems {
        allItems (orderBy: createdAt_DESC) {
 		id
@@ -10,9 +10,39 @@ export const items = gql`
 		note
 		priceQuantity
 		quantity
+    shop{
+      id
+      name
+    }
 	 }
   }
 `;
+export const filteredItems = gql`
+  query allItems($id:ID!) {
+       allItems (
+         orderBy: createdAt_DESC
+         filter:{
+           shop:{
+             id:$id
+           }
+         }
+       ) {
+		id
+		key:id
+		createdAt
+		done
+		name
+		note
+		priceQuantity
+		quantity
+    shop{
+      id
+      name
+    }
+	 }
+  }
+`;
+
 export const updateItemDone = gql`
 	mutation updateItem($id: ID!,$done:Boolean!) {
 		updateItem(
@@ -33,6 +63,10 @@ export const itemsSubscription = gql`
         id
     		key:id
     		createdAt
+        shop{
+          id
+          name
+        }
     		done
     		name
     		note
@@ -41,6 +75,10 @@ export const itemsSubscription = gql`
 			}
       previousValues{
         id
+        shop{
+          id
+          name
+        }
       }
 		}
 	}

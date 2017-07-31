@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import { Image } from "react-native";
+import { Image, ActivityIndicator} from "react-native";
+import {shops, shopsSubscription} from './query';
+import {graphql} from 'react-apollo';
 
 import {
 	Content,
@@ -24,38 +26,14 @@ import {
 } from "native-base";
 
 import styles from "./styles";
-
-
-const datas = [
-  {
-    name: 'Kaufland',
-    route: 'filter',
-    icon: 'ios-color-filter-outline',
-    bg: '#477EEA',
-    types: '8',
-  },
-  {
-    name: 'TESCO',
-    route: 'folder',
-    icon: 'ios-color-filter-outline',
-    bg: '#477EEA',
-    types: '8',
-  },
-  {
-    name: 'LEKAREN',
-    route: 'folder',
-    icon: 'ios-color-filter-outline',
-    bg: '#477EEA',
-    types: '8',
-  },
-  {
-    name: 'LIDL',
-    route: 'folder',
-    icon: 'ios-color-filter-outline',
-    bg: '#477EEA',
-    types: '8',
-  },
-];
+const withShops = graphql(shops, {
+    props: ({ data: { loading, allShops, error, refetch, subscribeToMore } }) => ({
+        loadingShops: loading,
+        shops: allShops,
+        refetchShops:refetch,
+        subscribeToMoreShops:subscribeToMore,
+    }),
+});
 
 class SideBar extends Component {
 	constructor(props) {
@@ -67,6 +45,11 @@ class SideBar extends Component {
 	}
 
 render() {
+	if(this.props.loadingShops){
+		return (<ActivityIndicator
+			animating size={'large'}
+			color='#007299'/>);
+	}
   return (
     <Container>
       <Header>
@@ -86,9 +69,9 @@ render() {
         backgroundColor: "#fff",
         top: -1
       }}>
-        <List dataArray={datas} renderRow={data => <ListItem button noBorder onPress={() => this.props.navigation.navigate(data.route)}>
+        <List dataArray={[{id:'all', name:'All'}].concat(this.props.shops)} renderRow={data => <ListItem button noBorder onPress={() => this.props.navigation.navigate('ItemList',{id:data.id})}>
           <Left>
-            <Icon active name={data.icon} style={{
+            <Icon active name='ios-color-filter-outline' style={{
               color: "#777",
               fontSize: 26,
               width: 30
@@ -97,17 +80,19 @@ render() {
               {data.name}
             </Text>
           </Left>
-          {data.types && <Right style={{
+          {data.items && <Right style={{
             flex: 1
           }}>
-            <Badge style={{
+					{
+						data.items && <Badge style={{
               borderRadius: 3,
               height: 25,
               width: 72,
-              backgroundColor: data.bg
+              backgroundColor: '#477EEA'
             }}>
-              <Text style={styles.badgeText}>{data.types}</Text>
+              <Text style={styles.badgeText}>{data.items.length}</Text>
             </Badge>
+					}
           </Right>}
         </ListItem>}/>
         <Separator bordered>
@@ -141,4 +126,4 @@ render() {
 	}
 }
 
-export default SideBar;
+export default withShops(SideBar);
