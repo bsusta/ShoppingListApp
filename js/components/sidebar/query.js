@@ -12,7 +12,30 @@ export const shops = gql`
 	 }
   }
 `;
-
+export const itemsSubscription = gql`
+	subscription {
+		Item(filter: {mutation_in: [CREATED,UPDATED,DELETED]}) {
+			mutation
+			node {
+        id
+    		key:id
+    		createdAt
+        shop{
+          id
+          name
+        }
+    		done
+    		name
+    		note
+    		priceQuantity
+    		quantity
+			}
+      previousValues{
+        id
+      }
+		}
+	}
+`;
 export const shopsSubscription = gql`
 	subscription {
 		Shop(filter: {mutation_in: [CREATED,UPDATED,DELETED]}) {
@@ -21,6 +44,9 @@ export const shopsSubscription = gql`
 				id
 				key:id
 				name
+        items{
+          id
+        }
 			}
 		}
 	}

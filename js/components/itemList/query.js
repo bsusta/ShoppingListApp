@@ -75,10 +75,6 @@ export const itemsSubscription = gql`
 			}
       previousValues{
         id
-        shop{
-          id
-          name
-        }
       }
 		}
 	}

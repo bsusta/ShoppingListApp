@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Image, ActivityIndicator} from "react-native";
-import {shops, shopsSubscription} from './query';
+import {shops, shopsSubscription,itemsSubscription} from './query';
 import {graphql} from 'react-apollo';
 
 import {
@@ -42,6 +42,23 @@ class SideBar extends Component {
 			shadowOffsetWidth: 1,
 			shadowRadius: 4,
 		};
+	}
+	componentDidMount(){
+		this.props.subscribeToMoreShops({
+			document: shopsSubscription,
+			updateQuery: () => {
+				this.props.refetchShops();
+				return;
+			},
+		});
+		this.props.subscribeToMoreShops({
+			document: itemsSubscription,
+			updateQuery: () => {
+				this.props.refetchShops();
+				return;
+			},
+		});
+
 	}
 
 render() {

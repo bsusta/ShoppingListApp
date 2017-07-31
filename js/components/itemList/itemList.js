@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withApollo } from "react-apollo";
-import {itemsSubscription,items, updateItemDone} from "./query";
+import {itemsSubscription,itemsAll, updateItemDone} from "./query";
 
 import {
   Container,
@@ -31,30 +31,37 @@ class ItemList extends Component {
     this.props.subscribeToMoreItems({
       document: itemsSubscription,
       updateQuery: (prev, recieved) => {
-
-        if(this.props.id!='all'){
-          if(recieved.subscriptionData.data.Item.mutation=='DELETED' && !recieved.subscriptionData.data.Item.previousValues.shop || recieved.subscriptionData.data.Item.previousValues.shop.id!=this.props.id){
-            return prev;
-          }
-          if(!recieved.subscriptionData.data.Item.node.shop || recieved.subscriptionData.data.Item.node.shop.id!=this.props.id){
-              return prev;
-          }
-        }
         switch (recieved.subscriptionData.data.Item.mutation) {
           case "DELETED":
           {
             let newItems=[...prev.allItems];
-            newItems.splice(prev.allItems.findIndex((element)=>element.id==recieved.subscriptionData.data.Item.previousValues.id),1);
+            let index=prev.allItems.findIndex((element)=>element.id==recieved.subscriptionData.data.Item.previousValues.id);
+            if(index==-1){
+              return prev;
+            }
+            newItems.splice(index,1);
             return Object.assign({},prev,{allItems:newItems});
             break;
           }
           case "CREATED":
-          return Object.assign({},prev,{allItems:[recieved.subscriptionData.data.Item.node,...prev.allItems]});
+          if(this.props.id=='all' || (recieved.subscriptionData.data.Item.node.shop&&recieved.subscriptionData.data.Item.node.shop.id==this.props.id) ){
+            return Object.assign({},prev,{allItems:[recieved.subscriptionData.data.Item.node,...prev.allItems]});
+          }
+          return prev;
           break;
           case "UPDATED":
           {
             let newItems=[...prev.allItems];
-            newItems[newItems.findIndex((element)=>element.id==recieved.subscriptionData.data.Item.node.id)]=recieved.subscriptionData.data.Item.node;
+            let index=prev.allItems.findIndex((element)=>element.id==recieved.subscriptionData.data.Item.node.id);
+            if(index!=-1 && recieved.subscriptionData.data.Item.node.shop && recieved.subscriptionData.data.Item.node.shop.id!=this.props.id && this.props.id!='all'){
+              newItems.splice(index,1);
+            }
+            else if(index==-1 && recieved.subscriptionData.data.Item.node.shop && recieved.subscriptionData.data.Item.node.shop.id==this.props.id && this.props.id!='all'){
+              newItems=[recieved.subscriptionData.data.Item.node,...newItems];
+            }
+            else if(index!=-1 && (this.props.id=='all'||(recieved.subscriptionData.data.Item.node.shop && recieved.subscriptionData.data.Item.node.shop.id==this.props.id))){
+              newItems[index]=recieved.subscriptionData.data.Item.node;
+            }
             return Object.assign({},prev,{allItems:newItems});
             break;
           }
@@ -126,10 +133,10 @@ class ItemList extends Component {
                             }
                           },
                           update: (proxy, { data: { updateItem } }) => {
-                            let data = proxy.readQuery({ query: items });
+                            let data = proxy.readQuery({ query: itemsAll });
                             let index = data.allItems.findIndex((element)=>element.id==item.id);
                             data.allItems[index].done=updateItem.done;
-                            proxy.writeQuery({ query: items, data });
+                            proxy.writeQuery({ query: itemsAll, data });
                           },
                           });
                       }
@@ -151,10 +158,10 @@ class ItemList extends Component {
                                         }
                                       },
                                       update: (proxy, { data: { updateItem } }) => {
-                                        let data = proxy.readQuery({ query: items });
+                                        let data = proxy.readQuery({ query: itemsAll });
                                         let index = data.allItems.findIndex((element)=>element.id==item.id);
                                         data.allItems[index].done=updateItem.done;
-                                        proxy.writeQuery({ query: items, data });
+                                        proxy.writeQuery({ query: itemsAll, data });
                                       },
                                       });
                                   }
