@@ -1,8 +1,8 @@
 {
   "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 6188,
   "expoServerNgrokUrl": "https://md-sxs.ladislavbili.shoppinglistapp.exp.direct",
   "packagerNgrokUrl": "https://packager.md-sxs.ladislavbili.shoppinglistapp.exp.direct",
-  "ngrokPid": 5940
+  "ngrokPid": 320,
+  "packagerPort": 19001,
+  "packagerPid": 5572
 }

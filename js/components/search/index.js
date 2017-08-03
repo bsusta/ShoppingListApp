@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-
+import ItemList from './itemList';
+import { graphql} from "react-apollo";
 import {
   Container,
   Header,
@@ -18,45 +19,33 @@ import {
   Item,
   Input
 } from "native-base";
-
+import {itemFilter} from './query';
 import styles from "./styles";
 
-
-
-const datas = [
-  {
-    itemName: "Chleba",
-    amount: "1",
-    price: "5"
-  },
-  {
-    itemName: "Chleba",
-    amount: "1",
-    price: "5"
-  },
-  {
-    itemName: "Chleba",
-    amount: "1",
-    price: "5"
-  },
-  {
-    itemName: "Chleba",
-    amount: "1",
-    price: "5"
-  },
-  {
-    itemName: "Chleba",
-    amount: "1",
-    price: "5"
-  },
-  {
-    itemName: "Chleba",
-    amount: "1",
-    price: "5"
-  }
-];
-
 class Search extends Component {
+  constructor(props){
+    super(props);
+    this.state={filter:'',wrapper:null}
+  }
+
+  setWrapper(){
+    let newWrapper= graphql(itemFilter,{
+        options:{
+          variables:{
+            filter:this.state.filter,
+          },
+        },
+        props: ({ data: { loading, allItems, error, refetch,subscribeToMore } }) => ({
+          loadingItems: loading,
+          items: allItems,
+          itemsError: error,
+          refetchItems:refetch,
+          subscribeToMoreItems:subscribeToMore,
+        })
+      });
+    this.setState({wrapper:newWrapper(ItemList)});
+  }
+
   render() {
     return (
       <Container style={styles.container}>
@@ -75,31 +64,15 @@ class Search extends Component {
           <ListItem>
             <Item rounded>
               <Icon name="ios-search" />
-              <Input placeholder="Search" />
+              <Input value={this.state.filter} onChangeText={(value)=>this.setState({filter:value})} placeholder="Search" onSubmitEditing={this.setWrapper.bind(this)} keyboardType='web-search' />
             </Item>
           </ListItem>
-        <Button primary block style={{ margin: 15 }}>
+        <Button primary block style={{ margin: 15 }} onPress={this.setWrapper.bind(this)}>
         <Text>Search</Text>
         </Button>
-          <List
-            dataArray={datas}
-            renderRow={data =>
-              <ListItem thumbnail>
-                <Left>
-
-                </Left>
-                <Body>
-                  <Text>{data.itemName}</Text>
-                  <Text numberOfLines={1} note>Amount: {data.amount}</Text>
-                  <Text numberOfLines={1} note>Price/stock: {data.price}</Text>
-                </Body>
-                <Right>
-                  <Button transparent>
-                    <CheckBox checked={false} />
-                  </Button>
-                </Right>
-              </ListItem>}
-          />
+        {
+          this.state.wrapper && <this.state.wrapper navigation={this.props.navigation}/>
+        }
         </Content>
       </Container>
     );
