@@ -6,6 +6,7 @@ export const shops = gql`
 		id
 		key:id
 		name
+		color
 	 }
   }
 `;

@@ -55,6 +55,18 @@ export const updateItemDone = gql`
 	}
 `;
 
+
+export const deleteItem = gql`
+	mutation deleteItem($id: ID!) {
+		deleteItem(
+			id:$id
+		)
+    {
+    id
+	}
+	}
+`;
+
 export const itemsSubscription = gql`
 	subscription {
 		Item(filter: {mutation_in: [CREATED,UPDATED,DELETED]}) {

@@ -92,7 +92,7 @@ class SideBar extends Component {
                     <List dataArray={[{id: 'all', name: 'All'}].concat(this.props.shops)}
                           renderRow={data =>
                               <ListItem button noBorder
-                               onPress={() => this.props.navigation.navigate('ItemList', {id: data.id})}>
+                               onPress={() => this.props.navigation.navigate('ItemList', {id: data.id,name:data.name,color:data.color})}>
                               <Left>
                                   <Icon active name='ios-color-filter-outline' style={{
                                       color: "#777",

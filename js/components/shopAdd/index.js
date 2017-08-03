@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ColorPicker , fromHsv } from 'react-native-color-picker'
+import { ColorPicker , fromHsv } from 'react-native-color-picker';
 import { View, Text } from 'react-native';
 import { withApollo} from 'react-apollo';
 import {createShop} from "./query"
@@ -64,7 +64,7 @@ class ShopAdd extends Component {
           <Text note>ShopName</Text>
           <View style={{ borderColor: '#CCCCCC', backgroundColor:this.state.shopColor, borderWidth: 0.5, marginBottom: 15 }}>
             <Input
-                value={this.props.shopName}
+                value={this.state.shopName}
                 placeholder='Shop name'
                 style={{color:'white'}}
                 placeholderTextColor="white"

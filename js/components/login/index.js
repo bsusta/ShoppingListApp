@@ -55,7 +55,7 @@ class Login extends Component {
                     loading: false
                 }
             );
-            this.props.navigation.navigate('ItemList',{id:'all'});
+            this.props.navigation.navigate('ItemList',{id:'all', name:'All'});
         }
 
         );

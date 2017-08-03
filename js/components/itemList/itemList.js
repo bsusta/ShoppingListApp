@@ -72,13 +72,18 @@ class ItemList extends Component {
     });
     }
 
+    deleteItem(id){
+
+    }
+
   render() {
     if(this.props.loadingItems){
       return (<ActivityIndicator
           animating size={'large'}
           color='#007299'/>);
     }
-    return (
+
+      return (
       <Container style={styles.container}>
         <Header>
           <Left>
@@ -87,14 +92,17 @@ class ItemList extends Component {
           </Button>
           </Left>
           <Body>
-            <Title>ShopName</Title>
+            <Title>{this.props.name}</Title>
           </Body>
           <Right>
+              {
+                  this.props.id!='all' && <Button transparent onPress={() => this.props.navigation.navigate('ShopEdit',{id:this.props.id,name:this.props.name,color:this.props.color})}>
+                    <Icon name="settings"/>
+                  </Button>
+              }
+
             <Button transparent style={{ marginTop: 8 }} onPress={() => this.props.navigation.navigate('Search')}>
               <Icon name="search" style={{ color: 'white' }} />
-            </Button>
-            <Button transparent onPress={() => this.props.navigation.navigate('SettingsList')}>
-              <Icon name="settings"/>
             </Button>
           </Right>
         </Header>
@@ -105,43 +113,6 @@ class ItemList extends Component {
             renderRow={item =>
               <ListItem thumbnail>
                 <Left>
-
-                </Left>
-                <Body>
-                  <TouchableHighlight transparent onPress={() => this.props.navigation.navigate('EditItem',{item})}>
-                    <View>
-                      <Text>{item.name}</Text>
-                      <Text numberOfLines={1} note>Quantity: {item.quantity}</Text>
-                      <Text numberOfLines={1} note>Price/stock: {item.priceQuantity}</Text>
-                    </View>
-                </TouchableHighlight>
-                </Body>
-                <Right>
-                  <Button transparent block
-                  onPress={
-                      ()=>{
-                        let newDone=!item.done;
-                        this.props.client.mutate({
-                          mutation: updateItemDone,
-                          variables: {
-                            done:newDone,id:item.id
-                          },
-                          optimisticResponse: {
-                            updateItem:{
-                              done: newDone,
-                              __typename:'Item'
-                            }
-                          },
-                          update: (proxy, { data: { updateItem } }) => {
-                            let data = proxy.readQuery({ query: itemsAll });
-                            let index = data.allItems.findIndex((element)=>element.id==item.id);
-                            data.allItems[index].done=updateItem.done;
-                            proxy.writeQuery({ query: itemsAll, data });
-                          },
-                          });
-                      }
-                  }
-                  >
                     <CheckBox checked={item.done}
                               onPress={
                                   ()=>{
@@ -167,6 +138,20 @@ class ItemList extends Component {
                                   }
                               }
                     />
+                </Left>
+                <Body>
+                <TouchableHighlight transparent onPress={() => this.props.navigation.navigate('EditItem',{item})}>
+                  <View style={{paddingLeft:10}}>
+                    <Text>{item.name}</Text>
+                    <Text numberOfLines={1} note>Quantity: {item.quantity}</Text>
+                    <Text numberOfLines={1} note>Price/stock: {item.priceQuantity}</Text>
+                  </View>
+                </TouchableHighlight>
+                </Body>
+
+                <Right>
+                  <Button noBorder onPress={() => this.props.navigation.navigate('AddItem',{id:this.props.id})}  iconLeft style={{backgroundColor:'white',borderWidth: 0.5 }}>
+                    <Icon active style={{ color: 'blue' }} name="trash" />
                   </Button>
                 </Right>
               </ListItem>}

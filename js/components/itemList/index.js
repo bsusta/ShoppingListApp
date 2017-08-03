@@ -17,7 +17,7 @@ class ItemListLoader extends Component {
           }),
       });
       const All=withAllItems(ItemList);
-      return <All id={this.props.navigation.state.params.id} navigation={this.props.navigation}/>
+      return <All id={this.props.navigation.state.params.id} name={this.props.navigation.state.params.name} navigation={this.props.navigation}/>
     }
     const withItems = graphql(filteredItems, {
         options:{
@@ -34,7 +34,7 @@ class ItemListLoader extends Component {
         }),
     });
     const Filtered=withItems(ItemList);
-    return <Filtered id={this.props.navigation.state.params.id} navigation={this.props.navigation}/>
+    return <Filtered id={this.props.navigation.state.params.id} name={this.props.navigation.state.params.name} color={this.props.navigation.state.params.color} navigation={this.props.navigation}/>
   }
 }
 

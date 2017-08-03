@@ -6,6 +6,7 @@ export const shops = gql`
 		id
 		key:id
 		name
+		color
     items{
       id
     }
@@ -44,6 +45,7 @@ export const shopsSubscription = gql`
 				id
 				key:id
 				name
+				color
         items{
           id
         }
