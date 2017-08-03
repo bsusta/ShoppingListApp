@@ -58,3 +58,8 @@ ios
 
 /coverage
 /third-part
+.expo/packager-info.json
+package-lock.json
+package.json
+.expo/packager-info.json
+.expo/settings.json
