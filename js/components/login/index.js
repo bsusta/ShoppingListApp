@@ -30,6 +30,7 @@ class Login extends Component {
 
     constructor(props) {
         super(props);
+        console.log(this.props.client);
         this.state = {
             userName: 'test@test.com',
             password: 'test',

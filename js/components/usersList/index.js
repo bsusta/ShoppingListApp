@@ -19,21 +19,38 @@ import {
   Footer,
   FooterTab,
 } from "native-base";
-
-import {TouchableHighlight} from "react-native";
-
+import {TouchableHighlight, ActivityIndicator} from "react-native";
+import {graphql} from 'react-apollo';
 import styles from "./styles";
-
-
-
-const datas = [
-  {
-    userName: "Branislav Susta",
-  },
-];
+import {users,usersSubscription} from './query';
+const withUsers = graphql(users, {
+    props: ({data: {loading, allUsers, error, refetch, subscribeToMore}}) => ({
+        loadingUsers: loading,
+        users: allUsers,
+        refetchUsers: refetch,
+        subscribeToMoreUsers: subscribeToMore,
+    }),
+});
 
 class UsersList extends Component {
-  render() {
+  constructor(props){
+    super(props);
+  }
+  componentDidMount(){
+    this.props.subscribeToMoreUsers({
+      document: usersSubscription,
+      updateQuery: () => {
+        this.props.refetchUsers();
+        return;
+      },
+    });
+  }
+  render(){
+    if(this.props.loadingUsers){
+      return (<ActivityIndicator
+          animating size={'large'}
+          color='#007299'/>);
+  }
     return (
       <Container style={styles.container}>
         <Header>
@@ -49,11 +66,11 @@ class UsersList extends Component {
         </Header>
         <Content>
           <List
-            dataArray={datas}
+            dataArray={this.props.users}
             renderRow={data =>
-              <ListItem onPress={() => this.props.navigation.navigate('UserEdit')}>
+              <ListItem onPress={() => this.props.navigation.navigate('UserEdit',data)}>
                   <Body>
-                      <Text>{data.userName}</Text>
+                      <Text>{data.email}</Text>
                   </Body>
                 <Right>
                   <Icon name="arrow-forward" />
@@ -74,4 +91,4 @@ class UsersList extends Component {
   }
 }
 
-export default UsersList;
+export default withUsers(UsersList);

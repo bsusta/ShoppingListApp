@@ -1,6 +1,7 @@
 import React from "react";
 import { Platform } from "react-native";
 import { StackNavigator } from "react-navigation";
+import {Root} from 'native-base';
 
 import Drawer from "./Drawer";
 import Login from "./components/login/";
@@ -39,11 +40,10 @@ const AppNavigator = StackNavigator(
     }
 );
 
-
-class AppNavigator extends Component {
-  render() {
-    return ;
-  }
+export default() => {
+  return (
+      <Root>
+        <AppNavigator onNavigationStateChange={null}/>
+      </Root>
+  );
 }
-
-export default AppNavigator;

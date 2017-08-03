@@ -39,6 +39,8 @@ const withShops = graphql(shops, {
 class EditItem extends Component {
   constructor(props) {
     super(props);
+    console.log(this.props.client);
+
   let item = this.props.navigation.state.params.item;
   this.state = {
     name:item.name?item.name:'',

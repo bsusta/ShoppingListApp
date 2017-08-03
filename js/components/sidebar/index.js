@@ -2,7 +2,6 @@ import React, {Component } from "react";
 import {Image, ActivityIndicator} from "react-native";
 import {shops, shopsSubscription, itemsSubscription} from './query';
 import {graphql} from 'react-apollo';
-
 import {
     Content,
     Text,
