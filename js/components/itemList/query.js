@@ -17,6 +17,19 @@ export const itemsAll = gql`
 	 }
   }
 `;
+
+export const deleteItem = gql`
+	mutation deleteItem($id: ID!) {
+		deleteItem(
+			id:$id
+		)
+    {
+    id
+	}
+	}
+`;
+
+
 export const filteredItems = gql`
   query allItems($id:ID!) {
        allItems (
@@ -56,16 +69,6 @@ export const updateItemDone = gql`
 `;
 
 
-export const deleteItem = gql`
-	mutation deleteItem($id: ID!) {
-		deleteItem(
-			id:$id
-		)
-    {
-    id
-	}
-	}
-`;
 
 export const itemsSubscription = gql`
 	subscription {

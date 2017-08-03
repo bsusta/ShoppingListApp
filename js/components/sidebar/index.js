@@ -93,24 +93,26 @@ class SideBar extends Component {
                           renderRow={data =>
                               <ListItem button noBorder
                                onPress={() => this.props.navigation.navigate('ItemList', {id: data.id,name:data.name,color:data.color})}>
-                              <Left>
-                                  <Icon active name='ios-color-filter-outline' style={{
+                              <Left style={{width: 32}}>
+                                  <Icon active name={data.id=='all'?'ios-color-filter-outline':'md-pricetag'} style={{
                                       color: "#777",
                                       fontSize: 26,
                                       width: 30
                                   }}/>
-                                  <Text style={styles.text}>
+                                  <View style={{backgroundColor:data.color}}>
+                                  <Text style={{...styles.text,color:data.id=='all'?'black':'white'}}>
                                       {data.name}
                                   </Text>
+                                </View>
                               </Left>
-                              {data.items && <Right style={{
-                                  flex: 1
+
+                              {data.items &&
+                                <Right style={{
                               }}>
                                   {
                                       data.items && <Badge style={{
                                           borderRadius: 3,
                                           height: 25,
-                                          width: 72,
                                           backgroundColor: '#477EEA'
                                       }}>
                                           <Text style={styles.badgeText}>{data.items.length}</Text>

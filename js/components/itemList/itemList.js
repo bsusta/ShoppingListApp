@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withApollo } from "react-apollo";
-import {itemsSubscription,itemsAll, updateItemDone} from "./query";
+import {Alert} from 'react-native';
+import {itemsSubscription,itemsAll, updateItemDone,deleteItem} from "./query";
 
 import {
   Container,
@@ -31,6 +32,8 @@ class ItemList extends Component {
     this.props.subscribeToMoreItems({
       document: itemsSubscription,
       updateQuery: (prev, recieved) => {
+        this.props.refetchItems();
+        return;
         switch (recieved.subscriptionData.data.Item.mutation) {
           case "DELETED":
           {
@@ -73,7 +76,32 @@ class ItemList extends Component {
     }
 
     deleteItem(id){
-
+      Alert.alert(
+        'Deleting item',
+        'Are you sure?',
+        [
+          {text: 'Cancel', style: 'cancel'},
+          {text: 'OK', onPress: () =>{
+            this.props.client.mutate({
+                  mutation: deleteItem,
+                  variables: { id},
+                optimisticResponse: {
+                  deleteItem:{
+                    id: id,
+                    __typename:'Item'
+                  }
+                },
+                update: (proxy, data) => {
+                  let queryData = proxy.readQuery({ query: itemsAll });
+                  let index = queryData.allItems.findIndex((element)=>element.id==data.data.deleteItem.id);
+                  queryData.allItems.splice(index,1);
+                  proxy.writeQuery({ query: itemsAll,data: queryData });
+                },
+              });
+          }},
+        ],
+        { cancelable: false }
+      );
     }
 
   render() {
@@ -85,7 +113,7 @@ class ItemList extends Component {
 
       return (
       <Container style={styles.container}>
-        <Header>
+        <Header style={{backgroundColor:this.props.color?this.props.color:'blue'}}>
           <Left>
           <Button transparent onPress={() => this.props.navigation.navigate('DrawerOpen')}>
             <Icon name="menu" />
@@ -100,7 +128,6 @@ class ItemList extends Component {
                     <Icon name="settings"/>
                   </Button>
               }
-
             <Button transparent style={{ marginTop: 8 }} onPress={() => this.props.navigation.navigate('Search')}>
               <Icon name="search" style={{ color: 'white' }} />
             </Button>
@@ -150,7 +177,7 @@ class ItemList extends Component {
                 </Body>
 
                 <Right>
-                  <Button noBorder onPress={() => this.props.navigation.navigate('AddItem',{id:this.props.id})}  iconLeft style={{backgroundColor:'white',borderWidth: 0.5 }}>
+                  <Button noBorder onPress={() => this.deleteItem(item.id)}  iconLeft style={{backgroundColor:'white' }}>
                     <Icon active style={{ color: 'blue' }} name="trash" />
                   </Button>
                 </Right>
