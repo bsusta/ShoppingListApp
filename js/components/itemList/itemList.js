@@ -93,8 +93,8 @@ class ItemList extends Component {
             <Button transparent style={{ marginTop: 8 }} onPress={() => this.props.navigation.navigate('Search')}>
               <Icon name="search" style={{ color: 'white' }} />
             </Button>
-            <Button transparent style={{ marginTop: 8 }} onPress={() => this.props.navigation.navigate('Login')}>
-              <Icon name="power" style={{ color: 'white' }} />
+            <Button transparent onPress={() => this.props.navigation.navigate('SettingsList')}>
+              <Icon name="settings"/>
             </Button>
           </Right>
         </Header>

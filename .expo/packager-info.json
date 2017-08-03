@@ -2,7 +2,7 @@
   "expoServerPort": 19000,
   "expoServerNgrokUrl": "https://md-sxs.bsusta.shoppinglistapp.exp.direct",
   "packagerNgrokUrl": "https://packager.md-sxs.bsusta.shoppinglistapp.exp.direct",
-  "ngrokPid": 9680,
+  "ngrokPid": 19016,
   "packagerPort": 19001,
-  "packagerPid": 13688
+  "packagerPid": 16716
 }

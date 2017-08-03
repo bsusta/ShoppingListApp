@@ -10,6 +10,12 @@ export default {
     flex: 1,
     backgroundColor: "#fff"
   },
+  shopButton:{
+      fontSize: Platform.OS === "ios" ? 13 : 11,
+      fontWeight: "400",
+      textAlign: "center",
+      marginTop: Platform.OS === "android" ? -3 : undefined,
+      color: 'blue'},
   drawerCover: {
     alignSelf: "stretch",
     // resizeMode: 'cover',
