@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withApollo, graphql} from 'react-apollo';
-import {Alert, ActivityIndicator} from 'react-native';
+import {Alert, ActivityIndicator, StatusBar} from 'react-native';
 import {shops, shopsSubscription, createItem} from './query';
 import {
   Container,
@@ -101,6 +101,7 @@ setPrice(input){
         color='#007299'/>);
     }
     return (
+
       <Container style={styles.container}>
         <Header>
           <Left>
@@ -109,7 +110,7 @@ setPrice(input){
             </Button>
           </Left>
           <Body>
-            <Title>Edit item</Title>
+            <Title>Add item</Title>
           </Body>
           <Right />
         </Header>

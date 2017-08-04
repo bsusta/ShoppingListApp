@@ -67,7 +67,10 @@ class Login extends Component {
     render() {
         return (
             <Container>
-                <StatusBar barStyle="light-content"/>
+            <StatusBar
+            backgroundColor="red"
+            barStyle="light-content"
+            />
                 <Content>
                     <Header>
                         <Body>

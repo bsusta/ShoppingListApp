@@ -126,13 +126,17 @@ setPrice(input){
         <Header>
           <Left>
           <Button transparent onPress={() => this.props.navigation.goBack()}>
-              <Icon name="arrow-back" />
+              <Icon name="close" />
             </Button>
           </Left>
           <Body>
             <Title>Edit item</Title>
           </Body>
-          <Right />
+          <Right>
+          <Button transparent onPress={this.submit.bind(this)}>
+            <Icon active style={{ color: 'white' }} name="ios-checkmark-circle-outline" />
+          </Button>
+          </Right>
         </Header>
         <Content style={{ padding: 15 }}>
 
@@ -186,14 +190,14 @@ setPrice(input){
       </Content>
       <Footer>
         <FooterTab>
-          <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }} onPress={this.deleteItem.bind(this)}>
+          <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5, backgroundColor:'red' }} onPress={this.deleteItem.bind(this)}>
             <Icon active style={{ color: 'white' }} name="trash" />
             <Text style={{ color: 'white' }} >Delete</Text>
           </Button>
         </FooterTab>
         <FooterTab>
           <Button onPress={this.submit.bind(this)} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
-            <Icon active style={{ color: 'white' }} name="add" />
+            <Icon active style={{ color: 'white' }} name="ios-checkmark-circle-outline" />
             <Text style={{ color: 'white' }} >Save</Text>
           </Button>
         </FooterTab>
