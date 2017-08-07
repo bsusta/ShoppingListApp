@@ -45,6 +45,7 @@ class AddItem extends Component {
     pricePerStock:'',
     note:'',
     quantity:'',
+    modalShops:false,
     displayOptionList:false,
     selectedShops:this.props.navigation.state.params.id=='all'?[]:[this.props.navigation.state.params.shop],
   };
@@ -152,7 +153,9 @@ setPrice(input){
           </View>
 
           <Text note>Shop</Text>
-
+          <Button block
+            onPress={()=>{this.setState({modalShops:true})}}
+          ><Text>Select shops</Text></Button>
           <MultiSelect
             items={this.props.shops}
             uniqueKey="id"
@@ -182,6 +185,35 @@ setPrice(input){
           </Button>
         </FooterTab>
       </Footer>
+      <Modal
+        animationType={"fade"}
+        transparent={false}
+        style={{flex:1}}
+        visible={this.state.modalShops}
+        onRequestClose={() => this.setState({modalShops:false})}
+        >
+        <Content style={{ padding: 15 }}>
+        <Header>
+          <Body>
+            <Title>Select shops</Title>
+          </Body>
+        </Header>
+
+       <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+       <Text>AA</Text>
+       </View>
+
+      </Content>
+      <Footer>
+
+        <FooterTab>
+          <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
+            onPress={()=>this.setState({modalShops:false})}>
+            <Text style={{ color: 'white' }} >DONE</Text>
+          </Button>
+        </FooterTab>
+      </Footer>
+    </Modal>
     </Container>
     );
   }
