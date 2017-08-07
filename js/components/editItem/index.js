@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withApollo, graphql} from 'react-apollo';
 import {Alert, ActivityIndicator} from 'react-native';
 import {updateItem, deleteItem, shops, shopsSubscription} from './query';
+import MultiSelect from 'react-native-multiple-select';
 import {
   Container,
   Header,
@@ -39,17 +40,17 @@ const withShops = graphql(shops, {
 class EditItem extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props.client);
-
   let item = this.props.navigation.state.params.item;
+  console.log(item);
   this.state = {
     name:item.name?item.name:'',
     pricePerStock:item.priceQuantity?item.priceQuantity.toString():'',
     note:item.note?item.note:'',
     quantity:item.quantity?item.quantity.toString():'',
-    shop:item.shop?item.shop.id:null,
+    selectedShops:item.shops,
   };
-}
+  console.log(this.state.selectedShops);
+ }
 componentDidMount(){
   this.props.subscribeToMoreShops({
     document: shopsSubscription,
@@ -106,10 +107,10 @@ setPrice(input){
     let priceQuantity=this.state.pricePerStock==''?0:(this.state.pricePerStock[0]=='.'?parseFloat('0'+this.state.pricePerStock):parseFloat(this.state.pricePerStock));
     let note=this.state.note;
     let quantity=parseInt(this.state.quantity==''?0:this.state.quantity);
-    let shopId=this.state.shop?this.state.shop:null;
+    let shopsIds=this.state.selectedShops.map((shop)=>shop.id);
     this.props.client.mutate({
           mutation: updateItem,
-          variables: { name, priceQuantity, note, quantity,id:this.props.navigation.state.params.item.id,shopId},
+          variables: { name, priceQuantity, note, quantity,id:this.props.navigation.state.params.item.id,shopsIds},
         });
     this.props.navigation.goBack(null);
 
@@ -176,16 +177,23 @@ setPrice(input){
 
           <Text note>Shop</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Picker
-              supportedOrientations={['portrait', 'landscape']}
-              iosHeader="Select one"
-              mode="dropdown"
-              selectedValue={this.state.shop}
-              onValueChange={(value)=>{this.setState({shop:value})}}>
-              {
-                [{name:'None',value:null,key:null}].concat(this.props.shops).map((shop)=><Item label={shop.name} value={shop.id} key={shop.key} />)
-              }
-          </Picker>
+          <MultiSelect
+            items={this.props.shops}
+            uniqueKey="id"
+            selectedItemsChange={(selectedItems)=>this.setState({selectedShops:selectedItems})}
+            selectedItems={this.state.selectedShops}
+            selectText="Pick shops"
+            searchInputPlaceholderText="Search Shops..."
+            tagRemoveIconColor="#CCC"
+            tagBorderColor="#CCC"
+            tagTextColor="#CCC"
+            selectedItemTextColor="#CCC"
+            selectedItemIconColor="#CCC"
+            itemTextColor="#000"
+            searchInputStyle={{ color: '#CCC' }}
+            submitButtonColor="#CCC"
+            submitButtonText="Submit"
+          />
         </View>
       </Content>
       <Footer>

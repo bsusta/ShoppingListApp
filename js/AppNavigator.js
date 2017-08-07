@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform } from "react-native";
+import { Platform, StatusBar } from "react-native";
 import { StackNavigator } from "react-navigation";
 import {Root} from 'native-base';
 

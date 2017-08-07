@@ -1,7 +1,9 @@
 import React, {Component } from "react";
 import {Image, ActivityIndicator} from "react-native";
 import {shops, shopsSubscription, itemsSubscription} from './query';
-import {graphql} from 'react-apollo';
+import {graphql,withApollo} from 'react-apollo';
+import { connect } from 'react-redux';
+import Login from './../login/';
 import {
     Content,
     Text,
@@ -63,6 +65,12 @@ class SideBar extends Component {
     }
 
     render() {
+        if(!this.props.loggedIn){
+          return<View style={{paddingTop:20,flex:1}}>
+           <Text>You must log in first!</Text>
+          </View>
+        }
+        console.log(this.props.loggedIn);
         if (this.props.loadingShops) {
             return (<ActivityIndicator
                 animating size={'large'}
@@ -91,7 +99,7 @@ class SideBar extends Component {
                     <List dataArray={[{id: 'all', name: 'All'}].concat(this.props.shops)}
                           renderRow={data =>
                               <ListItem button noBorder
-                               onPress={() => this.props.navigation.navigate('ItemList', {id: data.id,name:data.name,color:data.color})}>
+                               onPress={() => this.props.navigation.navigate('ItemList', {id: data.id,name:data.name,color:data.color,shop:data})}>
                               <Left style={{width: 32}}>
                                   <Icon active name={data.id=='all'?'ios-color-filter-outline':'md-pricetag'} style={{
                                       color: "#777",
@@ -171,4 +179,13 @@ class SideBar extends Component {
     }
 }
 
-export default withShops(SideBar);
+function bindActions(dispatch) {
+    return {
+    };
+}
+
+const mapStateToProps = state => ({
+  loggedIn:state.userId.userId?true:false
+});
+
+export default withApollo(withShops(connect(mapStateToProps, bindActions)(SideBar)));

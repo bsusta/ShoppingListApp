@@ -5,8 +5,13 @@ import ItemList from './itemList';
 
 
 class ItemListLoader extends Component {
+  constructor(props){
+    super(props);
+  }
   render() {
-    if(this.props.navigation.state.params.id=="all"){
+    let params=this.props.navigation.state.params;
+    params=params?params:{id:'all',shop:'all',name:'All'};
+    if(params.id=="all"){
       const withAllItems = graphql(itemsAll, {
           props: ({ data: { loading, allItems, error, refetch, subscribeToMore } }) => ({
               loadingItems: loading,
@@ -17,12 +22,12 @@ class ItemListLoader extends Component {
           }),
       });
       const All=withAllItems(ItemList);
-      return <All id={this.props.navigation.state.params.id} name={this.props.navigation.state.params.name} navigation={this.props.navigation}/>
+      return <All id={params.id} shop={params.shop} name={params.name} navigation={this.props.navigation}/>
     }
     const withItems = graphql(filteredItems, {
         options:{
           variables:{
-            id:this.props.navigation.state.params.id,
+            id:params.id,
           },
         },
         props: ({ data: { loading, allItems, error, refetch, subscribeToMore } }) => ({
@@ -34,7 +39,7 @@ class ItemListLoader extends Component {
         }),
     });
     const Filtered=withItems(ItemList);
-    return <Filtered id={this.props.navigation.state.params.id} name={this.props.navigation.state.params.name} color={this.props.navigation.state.params.color} navigation={this.props.navigation}/>
+    return <Filtered id={params.id} shop={params.shop} name={params.name} color={params.color} navigation={this.props.navigation}/>
   }
 }
 

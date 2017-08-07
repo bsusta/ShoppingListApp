@@ -4,6 +4,6 @@
   "dev": true,
   "strict": false,
   "minify": false,
-  "urlType": "http",
+  "urlType": "exp",
   "urlRandomness": "mq-8x2"
 }

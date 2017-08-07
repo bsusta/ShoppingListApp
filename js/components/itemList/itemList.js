@@ -186,7 +186,7 @@ class ItemList extends Component {
         </Content>
         <Footer>
           <FooterTab>
-            <Button onPress={() => this.props.navigation.navigate('AddItem',{id:this.props.id})} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
+            <Button onPress={() => this.props.navigation.navigate('AddItem',{id:this.props.id,shop:this.props.shop})} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
               <Icon active style={{ color: 'white' }} name="add" />
               <Text style={{ color: 'white' }} >Add Item</Text>
             </Button>

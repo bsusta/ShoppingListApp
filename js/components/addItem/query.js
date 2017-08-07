@@ -4,7 +4,6 @@ export const shops = gql`
   query allShops {
        allShops (orderBy: name_ASC) {
 		id
-		key:id
 		name
 		color
 	 }
@@ -17,7 +16,6 @@ export const shopsSubscription = gql`
 			mutation
 			node {
 				id
-				key:id
 				name
 			}
 		}
@@ -25,13 +23,13 @@ export const shopsSubscription = gql`
 `;
 
 export const createItem = gql`
-	mutation createItem($name: String!,$priceQuantity: Float!,$note: String,$quantity: Int!,$shopId:ID) {
+	mutation createItem($name: String!,$priceQuantity: Float!,$note: String,$quantity: Int!,$shopsIds:[ID!]) {
 		createItem(
       name:$name
       priceQuantity: $priceQuantity
       quantity: $quantity
       note: $note
-			shopId:$shopId
+			shopsIds:$shopsIds
 		) {
 			id
 		}

@@ -12,14 +12,14 @@ export const shops = gql`
 `;
 
 export const updateItem = gql`
-	mutation updateItem($name: String!,$priceQuantity: Float!,$note: String,$quantity: Int!,$id: ID!, $shopId:ID) {
+	mutation updateItem($name: String!,$priceQuantity: Float!,$note: String,$quantity: Int!,$id: ID!, $shopsIds:[ID!]) {
     updateItem(
       id: $id,
       name:$name,
       priceQuantity: $priceQuantity,
       quantity: $quantity,
       note: $note,
-			shopId:$shopId
+			shopsIds:$shopsIds
     ) {
       id
       }

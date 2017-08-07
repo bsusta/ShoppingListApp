@@ -10,9 +10,10 @@ export const itemsAll = gql`
 		note
 		priceQuantity
 		quantity
-    shop{
+    shops{
       id
       name
+      color
     }
 	 }
   }
@@ -35,7 +36,7 @@ export const filteredItems = gql`
        allItems (
          orderBy: createdAt_DESC
          filter:{
-           shop:{
+           shops:{
              id:$id
            }
          }
@@ -48,9 +49,10 @@ export const filteredItems = gql`
 		note
 		priceQuantity
 		quantity
-    shop{
+    shops{
       id
       name
+      color
     }
 	 }
   }
@@ -78,9 +80,10 @@ export const itemsSubscription = gql`
         id
     		key:id
     		createdAt
-        shop{
+        shops{
           id
           name
+          color
         }
     		done
     		name
