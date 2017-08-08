@@ -52,3 +52,11 @@ export const shopsSubscription = gql`
 		}
 	}
 `;
+export const getMe = gql`
+  query Logout  {
+    user {
+      id
+      email
+    }
+  }
+`;

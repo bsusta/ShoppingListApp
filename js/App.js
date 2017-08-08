@@ -10,7 +10,7 @@ export default() => {
   const store = createStore(client);
   return (
     <ApolloProvider client={client} store={store}>
-      <AppNavigator/>
+      <AppNavigator style={{padding:15}}/>
     </ApolloProvider>
   );
 }

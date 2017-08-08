@@ -46,9 +46,11 @@ export const storeTokenToAsyncStorage = (token) =>
 export const removeTokenFromAsyncStorage = () =>
   AsyncStorage.multiRemove(['lansystem-graphcool-token']);
 
-export const addTokenToUse = (client, token) => {
+export const addTokenToUse = (client, token,rememberMe) => {
   addTokenInMiddleware(client, token);
-  storeTokenToAsyncStorage(token);
+  if(rememberMe){
+    storeTokenToAsyncStorage(token);    
+  }
 };
 
 export const removeTokenFromUse = (client) => {

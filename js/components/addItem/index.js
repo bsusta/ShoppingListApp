@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { withApollo, graphql} from 'react-apollo';
-import {Alert, ActivityIndicator, StatusBar, Modal} from 'react-native';
+import {Alert, ActivityIndicator,TouchableHighlight, StatusBar, Modal} from 'react-native';
 import {shops, shopsSubscription, createItem} from './query';
-import MultiSelect from 'react-native-multiple-select';
+import Shop from './shop';
 import {
   Container,
   Header,
@@ -46,9 +46,9 @@ class AddItem extends Component {
     note:'',
     quantity:'',
     modalShops:false,
-    displayOptionList:false,
-    selectedShops:this.props.navigation.state.params.id=='all'?[]:[this.props.navigation.state.params.shop],
+    shops:this.props.navigation.state.params.id=='all'?[]:[this.props.navigation.state.params.shop],
   };
+  this.setShop.bind(this);
 }
 componentDidMount(){
   this.props.subscribeToMoreShops({
@@ -88,13 +88,30 @@ setPrice(input){
     let priceQuantity=this.state.pricePerStock==''?0:(this.state.pricePerStock[0]=='.'?parseFloat('0'+this.state.pricePerStock):parseFloat(this.state.pricePerStock));
     let note=this.state.note;
     let quantity=parseInt(this.state.quantity==''?0:this.state.quantity);
-    let shopsIds=this.state.selectedShops.map((shop)=>shop.id);
+    let shopsIds=this.state.shops.map((shop)=>shop.id);
     this.props.client.mutate({
           mutation: createItem,
           variables: { name, priceQuantity, note, quantity,shopsIds},
         });
     this.props.navigation.goBack(null);
 
+  }
+  setShop(removing,shop){
+    if(removing){
+      let index=this.state.shops.findIndex((item)=>item.id==shop.id);
+      if(index==-1){
+        return;
+      }
+      let newShops=[...this.state.shops];
+      newShops.splice(index,1);
+      this.setState({shops:newShops});
+    }
+    else{
+      let index=this.state.shops.findIndex((item)=>item.id==shop.id);
+      if(index==-1){
+        this.setState({shops:[...this.state.shops,shop]});
+      }
+    }
   }
 
   render() {
@@ -153,28 +170,21 @@ setPrice(input){
           </View>
 
           <Text note>Shop</Text>
+          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
           <Button block
             onPress={()=>{this.setState({modalShops:true})}}
           ><Text>Select shops</Text></Button>
-          <MultiSelect
-            items={this.props.shops}
-            uniqueKey="id"
-            selectedItemsChange={(selectedItems)=>this.setState({selectedShops:selectedItems})}
-            selectedItems={this.state.selectedShops}
-            selectText="Pick shops"
-            searchInputPlaceholderText="Search Shops..."
-            tagRemoveIconColor="#CCC"
-            tagBorderColor="#CCC"
-            tagTextColor="#CCC"
-            selectedItemTextColor="#CCC"
-            selectedItemIconColor="#CCC"
-            itemTextColor="#000"
-            searchInputStyle={{ color: '#CCC' }}
-            submitButtonColor="#CCC"
-            submitButtonText="Submit"
+          <List
+            dataArray={this.state.shops}
+            renderRow={shop =>
+              <ListItem>
+                <View style={{backgroundColor:shop.color,paddingLeft:10}}>
+                  <Text style={{color:'white'}}>{shop.name}</Text>
+                </View>
+              </ListItem>
+              }
           />
 
-          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
         </View>
       </Content>
       <Footer>
@@ -200,7 +210,12 @@ setPrice(input){
         </Header>
 
        <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-       <Text>AA</Text>
+         <List
+           dataArray={this.props.shops}
+           renderRow={item =>
+             <Shop item={item} setShop={this.setShop.bind(this)} selected={this.state.shops.some((shop)=>item.id==shop.id)}/>
+             }
+         />
        </View>
 
       </Content>
@@ -209,7 +224,7 @@ setPrice(input){
         <FooterTab>
           <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
             onPress={()=>this.setState({modalShops:false})}>
-            <Text style={{ color: 'white' }} >DONE</Text>
+            <Text style={{ color: 'white' }}>DONE</Text>
           </Button>
         </FooterTab>
       </Footer>

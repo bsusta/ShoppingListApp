@@ -136,7 +136,7 @@ class ItemList extends Component {
 
         <Content>
           <List
-            dataArray={this.props.items}
+            dataArray={([...this.props.items]).sort((a,b)=> a.createdAt<b.createdAt?1:a.createdAt==b.createdAt?0:-1)}
             renderRow={item =>
               <ListItem thumbnail>
                 <Left>

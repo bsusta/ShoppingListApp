@@ -31,29 +31,26 @@ export const deleteItem = gql`
 `;
 
 
-export const filteredItems = gql`
-  query allItems($id:ID!) {
-       allItems (
-         orderBy: createdAt_DESC
-         filter:{
-           shops:{
-             id:$id
+export const shopItems = gql`
+  query allShops($id:ID!) {
+       allShops (
+         filter:{id:$id})
+         {
+         items{
+           id
+           key:id
+           createdAt
+           done
+           name
+           note
+           priceQuantity
+           quantity
+           shops{
+             id
+             name
+             color
            }
          }
-       ) {
-		id
-		key:id
-		createdAt
-		done
-		name
-		note
-		priceQuantity
-		quantity
-    shops{
-      id
-      name
-      color
-    }
 	 }
   }
 `;

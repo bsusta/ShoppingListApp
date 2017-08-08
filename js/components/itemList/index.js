@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { graphql} from "react-apollo";
-import {itemsAll,filteredItems} from "./query";
+import {itemsAll,shopItems} from "./query";
 import ItemList from './itemList';
 
 
@@ -24,15 +24,15 @@ class ItemListLoader extends Component {
       const All=withAllItems(ItemList);
       return <All id={params.id} shop={params.shop} name={params.name} navigation={this.props.navigation}/>
     }
-    const withItems = graphql(filteredItems, {
+    const withItems = graphql(shopItems, {
         options:{
           variables:{
             id:params.id,
           },
         },
-        props: ({ data: { loading, allItems, error, refetch, subscribeToMore } }) => ({
+        props: ({ data: { loading, allShops, error, refetch, subscribeToMore } }) => ({
             loadingItems: loading,
-            items: allItems,
+            items: allShops?allShops[0].items:allShops,
             itemsError: error,
             refetchItems:refetch,
             subscribeToMoreItems:subscribeToMore,

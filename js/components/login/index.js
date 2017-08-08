@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {View, ActivityIndicator, StatusBar} from 'react-native';
+import {View, ActivityIndicator, StatusBar,AsyncStorage} from 'react-native';
 import {withApollo, graphql} from 'react-apollo';
 import { connect } from 'react-redux';
 import { addTokenToUse } from './../../tokens/tokenHandling';
@@ -20,9 +20,10 @@ import {
     Right,
     Icon,
     Form,
-    Text
+    Text,
+    CheckBox
 } from "native-base";
-import {loginUser} from "./query";
+import {loginUser,getMe} from "./query";
 
 import styles from "./styles";
 
@@ -35,11 +36,39 @@ class Login extends Component {
             userName: 'test@test.com',
             password: 'test',
             loading: false,
+            waitingForToken:true,
+            rememberMe:false,
         }
+        this.getToken.bind(this);
+    }
+
+    componentDidMount(){
+      this.getToken();
+    }
+
+    async getToken(){
+      if(this.props.loggedIn){
+        this.props.navigation.navigate('ItemList',{id:'all', name:'All'});
+        this.setState({waitingForToken:false});
+      }
+      let token = await AsyncStorage.getItem('lansystem-graphcool-token');
+      if(token){
+        try{
+          addTokenToUse(this.props.client,token);
+          const data = await this.props.client.query({
+            query: getMe,
+          });
+          this.props.saveUser(data.data.user.id,token);
+          this.props.navigation.navigate('ItemList',{id:'all', name:'All'});
+        }catch(e){
+          console.log(e);
+        }
+      }
+      this.setState({waitingForToken:false});
     }
 
     async submit() {
-        this.setState(
+      this.setState(
             {loading: true}
         );
         let email = this.state.userName;
@@ -50,7 +79,7 @@ class Login extends Component {
             mutation: loginUser,
             variables: {email, password}
         }).then((userData)=>{
-            addTokenToUse(client,userData.data.signinUser.token);
+            addTokenToUse(client,userData.data.signinUser.token,this.state.rememberMe);
             this.props.saveUser(userData.data.signinUser.token,userData.data.signinUser.user.id);
             this.setState({
                     loading: false
@@ -60,11 +89,14 @@ class Login extends Component {
         }
 
         );
-
-
     }
 
     render() {
+        if(this.state.waitingForToken){
+          return (<ActivityIndicator
+              animating size={'large'}
+              color='#007299'/>);
+        }
         return (
             <Container>
             <StatusBar
@@ -93,6 +125,13 @@ class Login extends Component {
                                 value={this.state.password}
                                 onChangeText={(value) => this.setState({password: value})}
                                 secureTextEntry={true}
+                            />
+                        </Item>
+                        <Item inlineLabel last>
+                            <Label>Remember me</Label>
+                            <CheckBox
+                              checked={this.state.rememberMe}
+                              onPress={()=>this.setState({rememberMe:!this.state.rememberMe})}
                             />
                         </Item>
                     </Form>
@@ -126,6 +165,7 @@ function bindActions(dispatch) {
 }
 
 const mapStateToProps = state => ({
+  loggedIn:state.userId.userId?true:false
 });
 
 export default withApollo((connect(mapStateToProps, bindActions)(Login)));

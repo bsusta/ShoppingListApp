@@ -4,6 +4,9 @@ import {shops, shopsSubscription, itemsSubscription} from './query';
 import {graphql,withApollo} from 'react-apollo';
 import { connect } from 'react-redux';
 import Login from './../login/';
+import {removeTokenFromUse} from './../../tokens/tokenHandling';
+import {SUBMIT_ID} from './../../apollo/userId';
+
 import {
     Content,
     Text,
@@ -63,14 +66,18 @@ class SideBar extends Component {
         });
 
     }
-
+     logOut(){
+      removeTokenFromUse(this.props.client);
+      this.props.logOut();
+      this.props.client.resetStore();
+      this.props.navigation.navigate('Login');
+    }
     render() {
         if(!this.props.loggedIn){
           return<View style={{paddingTop:20,flex:1}}>
            <Text>You must log in first!</Text>
           </View>
         }
-        console.log(this.props.loggedIn);
         if (this.props.loadingShops) {
             return (<ActivityIndicator
                 animating size={'large'}
@@ -84,7 +91,7 @@ class SideBar extends Component {
                     </Body>
                     <Right>
                         <Button transparent style={{marginTop: 8}}
-                                onPress={() => this.props.navigation.navigate('Login')}>
+                                onPress={this.logOut.bind(this)}>
                             <Icon name="power" style={{color: 'white'}}/>
                         </Button>
                     </Right>
@@ -181,6 +188,8 @@ class SideBar extends Component {
 
 function bindActions(dispatch) {
     return {
+      logOut: () => dispatch({type:SUBMIT_ID,userId:null,token:null}),
+
     };
 }
 
