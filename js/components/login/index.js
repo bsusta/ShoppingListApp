@@ -4,7 +4,7 @@ import {withApollo, graphql} from 'react-apollo';
 import { connect } from 'react-redux';
 import { addTokenToUse } from './../../tokens/tokenHandling';
 
-
+import ItemList from './../itemList/';
 import {SUBMIT_ID} from './../../apollo/userId';
 import {
     Container,
@@ -37,7 +37,7 @@ class Login extends Component {
             password: 'test',
             loading: false,
             waitingForToken:true,
-            rememberMe:false,
+            rememberMe:true,
         }
         this.getToken.bind(this);
     }
@@ -58,8 +58,7 @@ class Login extends Component {
           const data = await this.props.client.query({
             query: getMe,
           });
-          this.props.saveUser(data.data.user.id,token);
-          this.props.navigation.navigate('ItemList',{id:'all', name:'All'});
+          this.props.saveUser(token=token,id=data.data.user.id,userMail=data.data.user.email);
         }catch(e){
           console.log(e);
         }
@@ -74,18 +73,16 @@ class Login extends Component {
         let email = this.state.userName;
         let password = this.state.password;
         let client = this.props.client;
-
         client.mutate({
             mutation: loginUser,
             variables: {email, password}
         }).then((userData)=>{
             addTokenToUse(client,userData.data.signinUser.token,this.state.rememberMe);
-            this.props.saveUser(userData.data.signinUser.token,userData.data.signinUser.user.id);
+            this.props.saveUser(token=userData.data.signinUser.token,id=userData.data.signinUser.user.id,userMail=userData.data.signinUser.user.email);
             this.setState({
                     loading: false
                 }
             );
-            this.props.navigation.navigate('ItemList',{id:'all', name:'All'});
         }
 
         );
@@ -96,6 +93,9 @@ class Login extends Component {
           return (<ActivityIndicator
               animating size={'large'}
               color='#007299'/>);
+        }
+        if(this.props.loggedIn){
+          return (<ItemList id='all' name='All' navigation={this.props.navigation}/>);
         }
         return (
             <Container>
@@ -160,7 +160,7 @@ class Login extends Component {
 
 function bindActions(dispatch) {
     return {
-        saveUser: (userId,token) => dispatch({type:SUBMIT_ID,userId:userId,token:token}),
+        saveUser: (token,id,userMail) => dispatch({type:SUBMIT_ID,userId:id,token:token,userMail:userMail}),
     };
 }
 

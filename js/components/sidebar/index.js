@@ -1,12 +1,11 @@
 import React, {Component } from "react";
 import {Image, ActivityIndicator} from "react-native";
-import {shops, shopsSubscription, itemsSubscription} from './query';
+import {shops, shopsSubscription, itemsSubscription, getMe} from './query';
 import {graphql,withApollo} from 'react-apollo';
 import { connect } from 'react-redux';
 import Login from './../login/';
 import {removeTokenFromUse} from './../../tokens/tokenHandling';
 import {SUBMIT_ID} from './../../apollo/userId';
-
 import {
     Content,
     Text,
@@ -87,15 +86,8 @@ class SideBar extends Component {
             <Container>
                 <Header>
                     <Body>
-                    <Title>Shops list</Title>
+                    <Title>{this.props.userName}</Title>
                     </Body>
-                    <Right>
-                        <Button transparent style={{marginTop: 8}}
-                                onPress={this.logOut.bind(this)}>
-                            <Icon name="power" style={{color: 'white'}}/>
-                        </Button>
-                    </Right>
-
                 </Header>
 
                 <Content bounces={false} style={{
@@ -145,11 +137,11 @@ class SideBar extends Component {
                                 active
                                 name='add'
                                 style={{
-                                color: "blue",
+                                color: "#3F51B5",
                                 fontSize: 26,
                                 width: 30
                             }}/>
-                            <Text style={{...styles.text,color:'blue'}}>Shop</Text>
+                            <Text style={{...styles.text,color:'#3F51B5'}}>Shop</Text>
                         </Left>
 
                         <Right/>
@@ -180,6 +172,11 @@ class SideBar extends Component {
                             <Icon name="arrow-forward"/>
                         </Right>
                     </ListItem>
+                    <Button danger block onPress={this.logOut.bind(this)} iconLeft style={{ flexDirection: 'row', borderColor: 'white', marginTop:5, borderWidth: 0.5 }}>
+                      <Icon active style={{ color: 'white' }} name="power" />
+                      <Text style={{ color: 'white' }} >Log out</Text>
+                    </Button>
+
                 </Content>
             </Container>
         );
@@ -188,13 +185,14 @@ class SideBar extends Component {
 
 function bindActions(dispatch) {
     return {
-      logOut: () => dispatch({type:SUBMIT_ID,userId:null,token:null}),
+      logOut: () => dispatch({type:SUBMIT_ID,userId:null,userMail:null,token:null}),
 
     };
 }
 
 const mapStateToProps = state => ({
-  loggedIn:state.userId.userId?true:false
+  loggedIn:state.userId.userId?true:false,
+  userName:state.userId.userMail
 });
 
 export default withApollo(withShops(connect(mapStateToProps, bindActions)(SideBar)));

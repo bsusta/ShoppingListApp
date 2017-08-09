@@ -113,7 +113,7 @@ class ItemList extends Component {
 
       return (
       <Container style={styles.container}>
-        <Header style={{backgroundColor:this.props.color?this.props.color:'blue'}}>
+        <Header style={{backgroundColor:this.props.color?this.props.color:'#3F51B5'}}>
           <Left>
           <Button transparent onPress={() => this.props.navigation.navigate('DrawerOpen')}>
             <Icon name="menu" />
@@ -178,7 +178,7 @@ class ItemList extends Component {
 
                 <Right>
                   <Button noBorder onPress={() => this.deleteItem(item.id)}  iconLeft style={{backgroundColor:'white' }}>
-                    <Icon active style={{ color: 'blue' }} name="trash" />
+                    <Icon active style={{ color: '#3F51B5' }} name="trash" />
                   </Button>
                 </Right>
               </ListItem>}

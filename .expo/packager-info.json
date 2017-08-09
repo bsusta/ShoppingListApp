@@ -2,7 +2,7 @@
   "expoServerPort": 19000,
   "expoServerNgrokUrl": "https://mq-8x2.ladislavbili.shoppinglistapp.exp.direct",
   "packagerNgrokUrl": "https://packager.mq-8x2.ladislavbili.shoppinglistapp.exp.direct",
-  "ngrokPid": 7900,
+  "ngrokPid": 5956,
   "packagerPort": 19001,
-  "packagerPid": 7216
+  "packagerPid": 5408
 }

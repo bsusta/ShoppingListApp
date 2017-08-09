@@ -3,6 +3,31 @@ import { graphql} from "react-apollo";
 import {itemsAll,shopItems} from "./query";
 import ItemList from './itemList';
 
+addNavigationHelpers = (navigation) => {
+        const original = addNavigationHelpers(navigation);
+        let debounce;
+        return {
+            ...original,
+            navigateWithDebounce: (routeName, params, action) => {
+                let func = () => {
+                    if (debounce) {
+                        return;
+                    }
+
+                    navigation.dispatch(NavigationActions.navigate({
+                        routeName,
+                        params,
+                        action
+                    }));
+
+                    debounce = setTimeout(() => {
+                        debounce = 0;
+                    }, 1)
+                };
+                return func();
+            }
+        }
+    };
 
 class ItemListLoader extends Component {
   constructor(props){
@@ -39,7 +64,7 @@ class ItemListLoader extends Component {
         }),
     });
     const Filtered=withItems(ItemList);
-    return <Filtered id={params.id} shop={params.shop} name={params.name} color={params.color} navigation={this.props.navigation}/>
+    return <Filtered id={params.id} shop={params.shop} name={params.name} color={params.color} navigation={addNavigationHelpers(this.props.navigation)}/>
   }
 }
 
