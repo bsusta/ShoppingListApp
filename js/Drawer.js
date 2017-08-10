@@ -22,7 +22,7 @@ const DrawerExample = DrawerNavigator(
     contentComponent: props => <SideBar {...props} />,
 }
 );
-/*
+
 const navigateOnce = (getStateForAction) => (action, state) => {
   const {type, routeName} = action;
   return (
@@ -32,5 +32,5 @@ const navigateOnce = (getStateForAction) => (action, state) => {
   ) ? null : getStateForAction(action, state);
 };
 DrawerExample.router.getStateForAction = navigateOnce(DrawerExample.router.getStateForAction);
-*/
+
 export default DrawerExample;
