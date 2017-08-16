@@ -28,9 +28,9 @@ const navigateOnce = (getStateForAction) => (action, state) => {
   return (
     state &&
     type === NavigationActions.NAVIGATE &&
-    routeName === state.routes[state.routes.length - 1].routeName
+    routeName === state.routes[state.routes.length - 1].routeName &&
+    !(routeName == 'DrawerOpen'|| routeName == 'DrawerClose')
   ) ? null : getStateForAction(action, state);
 };
 DrawerExample.router.getStateForAction = navigateOnce(DrawerExample.router.getStateForAction);
-
 export default DrawerExample;

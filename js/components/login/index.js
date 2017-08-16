@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {View, ActivityIndicator, StatusBar,AsyncStorage} from 'react-native';
+import {View, ActivityIndicator, StatusBar,AsyncStorage, BackHandler} from 'react-native';
 import {withApollo, graphql} from 'react-apollo';
 import { connect } from 'react-redux';
 import { addTokenToUse } from './../../tokens/tokenHandling';
@@ -31,7 +31,6 @@ class Login extends Component {
 
     constructor(props) {
         super(props);
-        console.log(this.props.client);
         this.state = {
             userName: 'test@test.com',
             password: 'test',
@@ -48,8 +47,8 @@ class Login extends Component {
 
     async getToken(){
       if(this.props.loggedIn){
-        this.props.navigation.navigate('ItemList',{id:'all', name:'All'});
         this.setState({waitingForToken:false});
+        return;
       }
       let token = await AsyncStorage.getItem('lansystem-graphcool-token');
       if(token){
