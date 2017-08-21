@@ -4,7 +4,6 @@ export const shops = gql`
   query allShops {
        allShops (orderBy: name_ASC) {
 		id
-		key:id
 		name
 		color
     items{
@@ -19,11 +18,12 @@ export const itemsSubscription = gql`
 			mutation
 			node {
         id
-    		key:id
     		createdAt
-        shop{
+        shops{
           id
           name
+          color
+          key:id
         }
     		done
     		name
@@ -43,7 +43,6 @@ export const shopsSubscription = gql`
 			mutation
 			node {
 				id
-				key:id
 				name
 				color
         items{
@@ -52,4 +51,12 @@ export const shopsSubscription = gql`
 			}
 		}
 	}
+`;
+export const getMe = gql`
+  query Logout  {
+    user {
+      id
+      email
+    }
+  }
 `;

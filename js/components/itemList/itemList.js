@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withApollo } from "react-apollo";
-import {Alert} from 'react-native';
-import {itemsSubscription,itemsAll, updateItemDone,deleteItem} from "./query";
+import {Alert, BackHandler} from 'react-native';
+import {itemsSubscription, updateItemDone,deleteItem} from "./query";
 
 import {
   Container,
@@ -28,6 +28,10 @@ import {ActivityIndicator,TouchableHighlight} from "react-native";
 import styles from "./styles";
 
 class ItemList extends Component {
+  constructor(props){
+    super(props);
+    this.state={zmena:false};
+  }
   componentWillMount(){
     this.props.subscribeToMoreItems({
       document: itemsSubscription,
@@ -92,10 +96,16 @@ class ItemList extends Component {
                   }
                 },
                 update: (proxy, data) => {
-                  let queryData = proxy.readQuery({ query: itemsAll });
-                  let index = queryData.allItems.findIndex((element)=>element.id==data.data.deleteItem.id);
-                  queryData.allItems.splice(index,1);
-                  proxy.writeQuery({ query: itemsAll,data: queryData });
+                  let queryData = proxy.readQuery({ query: this.props.sourceQuery });
+                  if(this.props.color){
+                    let index = queryData.allShops[0].items.findIndex((element)=>element.id==data.data.deleteItem.id);
+                    queryData.allShops[0].items.splice(index,1);
+                  }
+                  else{
+                    let index = queryData.allItems.findIndex((element)=>element.id==data.data.deleteItem.id);
+                    queryData.allItems.splice(index,1);
+                  }
+                  proxy.writeQuery({ query: this.props.sourceQuery,data: queryData });
                 },
               });
           }},
@@ -110,33 +120,11 @@ class ItemList extends Component {
           animating size={'large'}
           color='#007299'/>);
     }
-
       return (
       <Container style={styles.container}>
-        <Header style={{backgroundColor:this.props.color?this.props.color:'blue'}}>
-          <Left>
-          <Button transparent onPress={() => this.props.navigation.navigate('DrawerOpen')}>
-            <Icon name="menu" />
-          </Button>
-          </Left>
-          <Body>
-            <Title>{this.props.name}</Title>
-          </Body>
-          <Right>
-              {
-                  this.props.id!='all' && <Button transparent onPress={() => this.props.navigation.navigate('ShopEdit',{id:this.props.id,name:this.props.name,color:this.props.color})}>
-                    <Icon name="settings"/>
-                  </Button>
-              }
-            <Button transparent style={{ marginTop: 8 }} onPress={() => this.props.navigation.navigate('Search')}>
-              <Icon name="search" style={{ color: 'white' }} />
-            </Button>
-          </Right>
-        </Header>
-
         <Content>
           <List
-            dataArray={this.props.items}
+            dataArray={([...this.props.items]).filter((item)=>this.props.itemDone==undefined||(this.props.itemDone==item.done)).sort((a,b)=>a.createdAt<b.createdAt?1:a.createdAt==b.createdAt?0:-1)}
             renderRow={item =>
               <ListItem thumbnail>
                 <Left>
@@ -156,10 +144,17 @@ class ItemList extends Component {
                                         }
                                       },
                                       update: (proxy, { data: { updateItem } }) => {
-                                        let data = proxy.readQuery({ query: itemsAll });
-                                        let index = data.allItems.findIndex((element)=>element.id==item.id);
-                                        data.allItems[index].done=updateItem.done;
-                                        proxy.writeQuery({ query: itemsAll, data });
+                                        let data = proxy.readQuery({ query: this.props.sourceQuery });
+                                        if(this.props.color){
+                                          let index = data.allShops[0].items.findIndex((element)=>element.id==item.id);
+                                          data.allShops[0].items[index].done=updateItem.done;
+                                        }
+                                        else{
+                                          let index = data.allItems.findIndex((element)=>element.id==item.id);
+                                          data.allItems[index].done=updateItem.done;
+                                        }
+                                        proxy.writeQuery({ query: this.props.sourceQuery, data });
+                                        this.setState={}
                                       },
                                       });
                                   }
@@ -178,7 +173,7 @@ class ItemList extends Component {
 
                 <Right>
                   <Button noBorder onPress={() => this.deleteItem(item.id)}  iconLeft style={{backgroundColor:'white' }}>
-                    <Icon active style={{ color: 'blue' }} name="trash" />
+                    <Icon active style={{ color: '#3F51B5' }} name="trash" />
                   </Button>
                 </Right>
               </ListItem>}
@@ -186,7 +181,7 @@ class ItemList extends Component {
         </Content>
         <Footer>
           <FooterTab>
-            <Button onPress={() => this.props.navigation.navigate('AddItem',{id:this.props.id})} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
+            <Button onPress={() => this.props.navigation.navigate('AddItem',{id:this.props.id,shop:this.props.shop})} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
               <Icon active style={{ color: 'white' }} name="add" />
               <Text style={{ color: 'white' }} >Add Item</Text>
             </Button>

@@ -15,7 +15,7 @@ export default {
       fontWeight: "400",
       textAlign: "center",
       marginTop: Platform.OS === "android" ? -3 : undefined,
-      color: 'blue'},
+      color: '#3F51B5'},
   drawerCover: {
     alignSelf: "stretch",
     // resizeMode: 'cover',

@@ -11,3 +11,12 @@ export const loginUser = gql`
 		}
 	}
 `;
+
+export const getMe = gql`
+  query Me {
+    user {
+      id
+      email
+    }
+  }
+`;

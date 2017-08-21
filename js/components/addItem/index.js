@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { withApollo, graphql} from 'react-apollo';
-import {Alert, ActivityIndicator, StatusBar} from 'react-native';
+import {Alert, ActivityIndicator,TouchableHighlight, StatusBar, Modal} from 'react-native';
 import {shops, shopsSubscription, createItem} from './query';
+import Shop from './shop';
 import {
   Container,
   Header,
@@ -44,8 +45,10 @@ class AddItem extends Component {
     pricePerStock:'',
     note:'',
     quantity:'',
-    shop:this.props.navigation.state.params.id=='all'?null:this.props.navigation.state.params.id,
+    modalShops:false,
+    shops:this.props.navigation.state.params.id=='all'?[]:[this.props.navigation.state.params.shop],
   };
+  this.setShop.bind(this);
 }
 componentDidMount(){
   this.props.subscribeToMoreShops({
@@ -85,13 +88,30 @@ setPrice(input){
     let priceQuantity=this.state.pricePerStock==''?0:(this.state.pricePerStock[0]=='.'?parseFloat('0'+this.state.pricePerStock):parseFloat(this.state.pricePerStock));
     let note=this.state.note;
     let quantity=parseInt(this.state.quantity==''?0:this.state.quantity);
-    let shopId=this.state.shop?this.state.shop:null;
+    let shopsIds=this.state.shops.map((shop)=>shop.id);
     this.props.client.mutate({
           mutation: createItem,
-          variables: { name, priceQuantity, note, quantity,shopId},
+          variables: { name, priceQuantity, note, quantity,shopsIds},
         });
     this.props.navigation.goBack(null);
 
+  }
+  setShop(removing,shop){
+    if(removing){
+      let index=this.state.shops.findIndex((item)=>item.id==shop.id);
+      if(index==-1){
+        return;
+      }
+      let newShops=[...this.state.shops];
+      newShops.splice(index,1);
+      this.setState({shops:newShops});
+    }
+    else{
+      let index=this.state.shops.findIndex((item)=>item.id==shop.id);
+      if(index==-1){
+        this.setState({shops:[...this.state.shops,shop]});
+      }
+    }
   }
 
   render() {
@@ -101,7 +121,6 @@ setPrice(input){
         color='#007299'/>);
     }
     return (
-
       <Container style={styles.container}>
         <Header>
           <Left>
@@ -152,16 +171,20 @@ setPrice(input){
 
           <Text note>Shop</Text>
           <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
-            <Picker
-              supportedOrientations={['portrait', 'landscape']}
-              iosHeader="Select one"
-              mode="dropdown"
-              selectedValue={this.state.shop}
-              onValueChange={(value)=>{this.setState({shop:value})}}>
-              {
-                [{name:'None',value:null,key:null}].concat(this.props.shops).map((shop)=><Item label={shop.name} value={shop.id} key={shop.key} />)
+          <Button block
+            onPress={()=>{this.setState({modalShops:true})}}
+          ><Text>Select shops</Text></Button>
+          <List
+            dataArray={this.state.shops}
+            renderRow={shop =>
+              <ListItem>
+                <View style={{backgroundColor:shop.color,paddingLeft:10}}>
+                  <Text style={{color:'white'}}>{shop.name}</Text>
+                </View>
+              </ListItem>
               }
-          </Picker>
+          />
+
         </View>
       </Content>
       <Footer>
@@ -172,7 +195,41 @@ setPrice(input){
           </Button>
         </FooterTab>
       </Footer>
-      </Container>
+      <Modal
+        animationType={"fade"}
+        transparent={false}
+        style={{flex:1}}
+        visible={this.state.modalShops}
+        onRequestClose={() => this.setState({modalShops:false})}
+        >
+        <Content style={{ padding: 15 }}>
+        <Header>
+          <Body>
+            <Title>Select shops</Title>
+          </Body>
+        </Header>
+
+       <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+         <List
+           dataArray={this.props.shops}
+           renderRow={item =>
+             <Shop item={item} setShop={this.setShop.bind(this)} selected={this.state.shops.some((shop)=>item.id==shop.id)}/>
+             }
+         />
+       </View>
+
+      </Content>
+      <Footer>
+
+        <FooterTab>
+          <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
+            onPress={()=>this.setState({modalShops:false})}>
+            <Text style={{ color: 'white' }}>DONE</Text>
+          </Button>
+        </FooterTab>
+      </Footer>
+    </Modal>
+    </Container>
     );
   }
 }

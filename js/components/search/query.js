@@ -16,7 +16,7 @@ query allItems ($filter:String) {
   note
   priceQuantity
   quantity
-  shop{
+  shops{
     id
     name
   }
@@ -35,7 +35,7 @@ export const itemsAll = gql`
 		note
 		priceQuantity
 		quantity
-    shop{
+    shops{
       id
       name
     }
@@ -63,7 +63,7 @@ export const itemsSubscription = gql`
         id
     		key:id
     		createdAt
-        shop{
+        shops{
           id
           name
         }

@@ -1,7 +1,9 @@
 import gql from 'graphql-tag';
-export const itemsAll = gql`
+export const allItems = gql`
   query allItems {
-       allItems (orderBy: createdAt_DESC) {
+       allItems (
+         orderBy: createdAt_DESC
+       ) {
 		id
 		key:id
 		createdAt
@@ -10,9 +12,80 @@ export const itemsAll = gql`
 		note
 		priceQuantity
 		quantity
-    shop{
+    shops{
       id
       name
+      color
+    }
+	 }
+  }
+`;
+
+export const allItemsFiltered = gql`
+  query allItems($done:Boolean!) {
+       allItems (
+         orderBy: createdAt_DESC
+         filter:{done:$done}
+       ) {
+		id
+		key:id
+		createdAt
+		done
+		name
+		note
+		priceQuantity
+		quantity
+    shops{
+      id
+      name
+      color
+    }
+	 }
+  }
+`;
+
+export const allItemsFilteredNotDone = gql`
+  query allItems {
+       allItems (
+         orderBy: createdAt_DESC
+         filter:{done:false}
+       ) {
+		id
+		key:id
+		createdAt
+		done
+		name
+		note
+		priceQuantity
+		quantity
+    shops{
+      id
+      name
+      color
+    }
+	 }
+  }
+`;
+
+
+export const allItemsFilteredDone = gql`
+  query allItems {
+       allItems (
+         orderBy: createdAt_DESC
+         filter:{done:true}
+       ) {
+		id
+		key:id
+		createdAt
+		done
+		name
+		note
+		priceQuantity
+		quantity
+    shops{
+      id
+      name
+      color
     }
 	 }
   }
@@ -30,28 +103,26 @@ export const deleteItem = gql`
 `;
 
 
-export const filteredItems = gql`
-  query allItems($id:ID!) {
-       allItems (
-         orderBy: createdAt_DESC
-         filter:{
-           shop:{
-             id:$id
+export const shopItems = gql`
+  query allShops($id:ID!) {
+       allShops (
+         filter:{id:$id})
+         {
+         items{
+           id
+           key:id
+           createdAt
+           done
+           name
+           note
+           priceQuantity
+           quantity
+           shops{
+             id
+             name
+             color
            }
          }
-       ) {
-		id
-		key:id
-		createdAt
-		done
-		name
-		note
-		priceQuantity
-		quantity
-    shop{
-      id
-      name
-    }
 	 }
   }
 `;
@@ -78,9 +149,10 @@ export const itemsSubscription = gql`
         id
     		key:id
     		createdAt
-        shop{
+        shops{
           id
           name
+          color
         }
     		done
     		name

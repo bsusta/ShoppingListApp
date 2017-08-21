@@ -1,40 +1,114 @@
 import React, { Component } from "react";
 import { graphql} from "react-apollo";
-import {itemsAll,filteredItems} from "./query";
+import gql from 'graphql-tag';
+
+import { Footer, FooterTab, Container, Header,Tabs,Tab, Title, Content, Button, Icon, Text, Left, Right, Body, List, ListItem, View } from 'native-base';
+import {withAll,withShop,withAllFiltered} from "./wrappers";
+import {allItems, allItemsFiltered,shopItems,allItemsFilteredDone,allItemsFilteredNotDone} from './query';
+
 import ItemList from './itemList';
-
-
 class ItemListLoader extends Component {
+  constructor(props){
+    super(props);
+  }
   render() {
-    if(this.props.navigation.state.params.id=="all"){
-      const withAllItems = graphql(itemsAll, {
-          props: ({ data: { loading, allItems, error, refetch, subscribeToMore } }) => ({
-              loadingItems: loading,
-              items: allItems,
-              itemsError: error,
-              refetchItems:refetch,
-              subscribeToMoreItems:subscribeToMore,
-          }),
-      });
-      const All=withAllItems(ItemList);
-      return <All id={this.props.navigation.state.params.id} name={this.props.navigation.state.params.name} navigation={this.props.navigation}/>
+    let params=this.props.navigation.state.params;
+    params=params?params:{id:'all',shop:'all',name:'All'};
+    if(params.id=="all"){
+      let HOCAll=(withAll())(ItemList);
+      let HOCAllDone=(withAllFiltered(done=true))(ItemList);
+      let HOCAllNotDone=(withAllFiltered(done=false))(ItemList);
+      return (<Container>
+        <Header>
+          <Left>
+          <Button transparent onPress={() => this.props.navigation.navigate('DrawerOpen')}>
+            <Icon name="menu" />
+          </Button>
+          </Left>
+          <Body>
+            <Title>{params.name}</Title>
+          </Body>
+          <Right>
+            <Button transparent style={{ marginTop: 8 }} onPress={() => this.props.navigation.navigate('Search')}>
+              <Icon name="search" style={{ color: 'white' }} />
+            </Button>
+          </Right>
+        </Header>
+        <Tabs>
+        <Tab heading="Active">
+          <HOCAllNotDone id={params.id} shop={params.shop} name={params.name} color={params.color} navigation={this.props.navigation}  sourceQuery={allItemsFilteredNotDone}/>
+        </Tab>
+
+        <Tab heading="Done">
+          <HOCAllDone id={params.id} shop={params.shop} name={params.name} color={params.color} navigation={this.props.navigation} sourceQuery={allItemsFilteredDone}/>
+        </Tab>
+
+        <Tab heading="All">
+            <HOCAll id={params.id} shop={params.shop} name={params.name} color={params.color} navigation={this.props.navigation} sourceQuery={allItems}/>
+          </Tab>
+      </Tabs>
+    </Container>);
     }
-    const withItems = graphql(filteredItems, {
-        options:{
-          variables:{
-            id:this.props.navigation.state.params.id,
-          },
-        },
-        props: ({ data: { loading, allItems, error, refetch, subscribeToMore } }) => ({
-            loadingItems: loading,
-            items: allItems,
-            itemsError: error,
-            refetchItems:refetch,
-            subscribeToMoreItems:subscribeToMore,
-        }),
-    });
-    const Filtered=withItems(ItemList);
-    return <Filtered id={this.props.navigation.state.params.id} name={this.props.navigation.state.params.name} color={this.props.navigation.state.params.color} navigation={this.props.navigation}/>
+
+    let HOCShopAll=(withShop(id=params.id))(ItemList);
+    let shopItemsQuery = gql(`
+      query allShops {
+           allShops (
+             filter:{id:`+params.id+`})
+             {
+             items{
+               id
+               key:id
+               createdAt
+               done
+               name
+               note
+               priceQuantity
+               quantity
+               shops{
+                 id
+                 name
+                 color
+               }
+             }
+    	 }
+      }
+    `);
+    return (<Container>
+      <Header style={{backgroundColor:params.color?params.color:'#3F51B5'}}>
+        <Left>
+        <Button transparent onPress={() => this.props.navigation.navigate('DrawerOpen')}>
+          <Icon name="menu" />
+        </Button>
+        </Left>
+        <Body>
+          <Title>{params.name}</Title>
+        </Body>
+        <Right>
+
+          <Button transparent onPress={() => this.props.navigation.navigate('ShopEdit',{id:params.id,name:params.name,color:params.color})}>
+            <Icon name="settings"/>
+          </Button>
+
+          <Button transparent style={{ marginTop: 8 }} onPress={() => this.props.navigation.navigate('Search')}>
+            <Icon name="search" style={{ color: 'white' }} />
+          </Button>
+        </Right>
+      </Header>
+      <Tabs>
+      <Tab heading="Active">
+        <HOCShopAll id={params.id} shop={params.shop} name={params.name} color={params.color} navigation={this.props.navigation} itemDone={false} sourceQuery={shopItemsQuery}/>
+      </Tab>
+
+      <Tab heading="Done">
+        <HOCShopAll id={params.id} shop={params.shop} name={params.name} color={params.color} navigation={this.props.navigation} itemDone={true} sourceQuery={shopItemsQuery}/>
+      </Tab>
+
+      <Tab heading="All">
+          <HOCShopAll id={params.id} shop={params.shop} name={params.name} color={params.color} navigation={this.props.navigation} sourceQuery={shopItemsQuery}/>
+        </Tab>
+    </Tabs>
+  </Container>);
   }
 }
 

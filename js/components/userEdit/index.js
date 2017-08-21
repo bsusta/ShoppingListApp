@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { withApollo} from 'react-apollo';
+import { Alert } from "react-native";
+
 
 import {
   Container,
@@ -38,11 +40,21 @@ class UserEdit extends Component {
     this.props.navigation.goBack();
   }
   deleteUser(){
-    this.props.client.mutate({
-        mutation: deleteUser,
-        variables: {id:this.props.navigation.state.params.id},
-    });
-    this.props.navigation.goBack();
+    Alert.alert(
+        'Deleting user',
+        'Are you sure you want to delete this user?',
+        [
+            {text: 'Cancel', style: 'cancel'},
+            {text: 'OK', onPress: () =>{
+              this.props.client.mutate({
+                  mutation: deleteUser,
+                  variables: {id:this.props.navigation.state.params.id},
+              });
+              this.props.navigation.goBack();
+            }},
+        ],
+        { cancelable: false }
+    )
   }
   render() {
     return (

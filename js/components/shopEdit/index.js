@@ -30,7 +30,6 @@ import styles from "./styles";
 class ShopEdit extends Component {
   constructor(props){
       super(props);
-      console.log(this.props.navigation.state.params);
       this.state={
           shopColor:this.props.navigation.state.params.color,
           shopName:this.props.navigation.state.params.name,
