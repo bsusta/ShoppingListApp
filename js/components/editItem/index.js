@@ -47,7 +47,7 @@ class EditItem extends Component {
     note:item.note?item.note:'',
     quantity:item.quantity?item.quantity.toString():'',
     modalShops:false,
-    shops:item.shops,
+    shops:item.shops?item.shops:[],
 
   };
  }

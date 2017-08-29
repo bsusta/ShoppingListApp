@@ -48,8 +48,8 @@ const navigateOnce = (getStateForAction) => (action, state) => {
     routeName === state.routes[state.routes.length - 1].routeName
   ) ? null : getStateForAction(action, state);
 };
-
 AppNavigator.router.getStateForAction = navigateOnce(AppNavigator.router.getStateForAction);
+
 export default() => {
   return (
       <Root>
