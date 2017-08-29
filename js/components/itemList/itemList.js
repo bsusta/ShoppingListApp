@@ -172,7 +172,7 @@ class ItemList extends Component {
                 </Body>
 
                 <Right>
-                  <Button noBorder onPress={() => this.deleteItem(item.id)}  iconLeft style={{backgroundColor:'white' }}>
+                  <Button transparent primary onPress={() => this.deleteItem(item.id)}  iconLeft style={{backgroundColor:'white' }}>
                     <Icon active style={{ color: '#3F51B5' }} name="trash" />
                   </Button>
                 </Right>

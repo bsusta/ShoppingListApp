@@ -208,6 +208,14 @@ setShop(removing,shop){
               }
           />
         </View>
+
+        <Button iconLeft block
+            style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5, backgroundColor:'red' }}
+            onPress={this.deleteItem.bind(this)}>
+            <Icon active style={{ color: 'white' }} name="trash" />
+            <Text style={{ color: 'white' }} >Delete</Text>
+        </Button>
+
           <Modal
             animationType={"fade"}
             transparent={false}
@@ -230,10 +238,9 @@ setShop(removing,shop){
                  }
              />
            </View>
-
           </Content>
-          <Footer>
 
+          <Footer>
             <FooterTab>
               <Button style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}
                 onPress={()=>this.setState({modalShops:false})}>
@@ -243,6 +250,7 @@ setShop(removing,shop){
           </Footer>
         </Modal>
       </Content>
+      {/*
       <Footer>
         <FooterTab>
           <Button iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5, backgroundColor:'red' }} onPress={this.deleteItem.bind(this)}>
@@ -257,6 +265,7 @@ setShop(removing,shop){
           </Button>
         </FooterTab>
       </Footer>
+      */}
       </Container>
     );
   }

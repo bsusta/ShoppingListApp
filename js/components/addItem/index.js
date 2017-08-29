@@ -131,7 +131,11 @@ setPrice(input){
           <Body>
             <Title>Add item</Title>
           </Body>
-          <Right />
+          <Right>
+            <Button transparent onPress={this.submit.bind(this)}>
+              <Icon active style={{ color: 'white' }} name="ios-checkmark-circle-outline" />
+              </Button>
+          </Right>
         </Header>
         <Content style={{ padding: 15 }}>
 
@@ -187,6 +191,7 @@ setPrice(input){
 
         </View>
       </Content>
+      {/*
       <Footer>
         <FooterTab>
           <Button onPress={this.submit.bind(this)} iconLeft style={{ flexDirection: 'row', borderColor: 'white', borderWidth: 0.5 }}>
@@ -195,6 +200,7 @@ setPrice(input){
           </Button>
         </FooterTab>
       </Footer>
+      */}
       <Modal
         animationType={"fade"}
         transparent={false}
