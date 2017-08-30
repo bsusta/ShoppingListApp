@@ -101,15 +101,15 @@ class ItemListLoader extends Component {
         </Right>
       </Header>
       <Tabs>
-      <Tab heading="Active">
+      <Tab heading="Active" tabStyle={{backgroundColor:params.color?params.color:'#3F51B5'}} activeTabStyle={{backgroundColor:params.color?params.color:'#3F51B5'}} textStyle={{color:'white'}}>
         <HOCShopAll id={params.id} shop={params.shop} name={params.name} color={params.color} navigation={this.props.navigation} itemDone={false} sourceQuery={shopItemsQuery}/>
       </Tab>
 
-      <Tab heading="Done">
+      <Tab heading="Done" tabStyle={{backgroundColor:params.color?params.color:'#3F51B5'}} activeTabStyle={{backgroundColor:params.color?params.color:'#3F51B5'}} textStyle={{color:'white'}}>
         <HOCShopAll id={params.id} shop={params.shop} name={params.name} color={params.color} navigation={this.props.navigation} itemDone={true} sourceQuery={shopItemsQuery}/>
       </Tab>
 
-      <Tab heading="All">
+      <Tab heading="All" tabStyle={{backgroundColor:params.color?params.color:'#3F51B5'}} activeTabStyle={{backgroundColor:params.color?params.color:'#3F51B5'}} textStyle={{color:'white'}}>
           <HOCShopAll id={params.id} shop={params.shop} name={params.name} color={params.color} navigation={this.props.navigation} sourceQuery={shopItemsQuery}/>
         </Tab>
     </Tabs>
