@@ -137,3 +137,40 @@ $ npm install --save apollo-client
 $ npm install --save graphql-tag
 $ npm install --save react-apollo
 $ npm install --save subscriptions-transport-ws
+
+
+##Export apk from EXPO
+
+https://docs.expo.io/versions/latest/guides/building-standalone-apps.html
+
+### Configure app.json
+
+  {
+   "expo": {
+    "name": "ShopingListApp",
+    "icon": "",
+    "version": "1.0.1",
+    "slug": "shoping-list-app",
+    "sdkVersion": "19.0.0",
+    "ios": {
+      "bundleIdentifier": "com.yourcompany.yourappname"
+    },
+    "android": {
+      "package": "sk.lansystems.ShopingListApp"
+    }
+   }
+ }
+
+### Start the build - android
+
+Run exp start in your app directory to boot up the Expo packager. This is necessary because during the build process your app will be republished to ensure it is the latest version.
+Once the app has started, run exp build:android or exp build:ios.
+
+### Wait for it to finish building
+
+exp build:status
+
+### Download apk
+
+Kliknut na prave tlacitko mysi, vybrat mark oznacit download link a stiahnut APK.
+Treba opravit link, odstranenim zalomeni v linku.
