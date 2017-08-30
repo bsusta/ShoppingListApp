@@ -10,6 +10,11 @@ export const allItems = gql`
 		done
 		name
 		note
+    assigned{
+      id
+      userName
+      email
+    }
 		priceQuantity
 		quantity
     shops{
@@ -33,6 +38,11 @@ export const allItemsFiltered = gql`
 		done
 		name
 		note
+    assigned{
+      id
+      userName
+      email
+    }
 		priceQuantity
 		quantity
     shops{
@@ -54,6 +64,11 @@ export const allItemsFilteredNotDone = gql`
 		key:id
 		createdAt
 		done
+    assigned{
+      id
+      userName
+      email
+    }
 		name
 		note
 		priceQuantity
@@ -78,6 +93,11 @@ export const allItemsFilteredDone = gql`
 		key:id
 		createdAt
 		done
+    assigned{
+      id
+      userName
+      email
+    }
 		name
 		note
 		priceQuantity
@@ -114,6 +134,11 @@ export const shopItems = gql`
            createdAt
            done
            name
+           assigned{
+             id
+             userName
+             email
+           }
            note
            priceQuantity
            quantity
@@ -156,6 +181,11 @@ export const itemsSubscription = gql`
         }
     		done
     		name
+        assigned{
+          id
+          userName
+          email
+        }
     		note
     		priceQuantity
     		quantity

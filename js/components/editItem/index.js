@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withApollo, graphql} from 'react-apollo';
 import {Alert, ActivityIndicator,Modal} from 'react-native';
-import {updateItem, deleteItem, shops, shopsSubscription} from './query';
+import {updateItem, deleteItem, shops, shopsSubscription, users} from './query';
 import Shop from './shop';
 import {
   Container,
@@ -37,6 +37,15 @@ const withShops = graphql(shops, {
     }),
 });
 
+const withUsers = graphql(users, {
+    props: ({data: {loading, allUsers, error, refetch, subscribeToMore}}) => ({
+        loadingUsers: loading,
+        users: allUsers,
+        refetchUsers: refetch,
+        subscribeToMoreUsers: subscribeToMore,
+    }),
+});
+
 class EditItem extends Component {
   constructor(props) {
     super(props);
@@ -48,7 +57,7 @@ class EditItem extends Component {
     quantity:item.quantity?item.quantity.toString():'',
     modalShops:false,
     shops:item.shops?item.shops:[],
-
+    assigned:item.assigned?item.assigned.id:null,
   };
  }
 componentDidMount(){
@@ -125,16 +134,17 @@ setShop(removing,shop){
     let note=this.state.note;
     let quantity=parseInt(this.state.quantity==''?0:this.state.quantity);
     let shopsIds=this.state.shops.map((shop)=>shop.id);
+    let assignedId=this.state.assigned;
     this.props.client.mutate({
           mutation: updateItem,
-          variables: { name, priceQuantity, note, quantity,id:this.props.navigation.state.params.item.id,shopsIds},
+          variables: { name, priceQuantity, note, quantity,id:this.props.navigation.state.params.item.id,shopsIds,assignedId},
         });
     this.props.navigation.goBack(null);
 
   }
 
   render() {
-    if(this.props.loadingShops){
+    if(this.props.loadingShops||this.props.loadingUsers){
       return (<ActivityIndicator
         animating size={'large'}
         color='#007299'/>);
@@ -164,6 +174,21 @@ setShop(removing,shop){
              value={this.state.name}
              onChangeText={(value)=>this.setState({name:value})}
             />
+          </View>
+
+          <Text note>Assigned</Text>
+          <View style={{ borderColor: '#CCCCCC', borderWidth: 0.5, marginBottom: 15 }}>
+          <Picker
+            supportedOrientations={['portrait', 'landscape']}
+            mode="dropdown"
+            selectedValue={this.state.assigned}
+            onValueChange={(value)=>{this.setState({assigned : value})}}>
+            {
+              ([{id:null,userName:'Nepriradené',email:'Nepriradené'}]).concat(this.props.users).map((assigned)=>
+                  (<Item label={assigned.userName?assigned.userName:assigned.email} key={assigned.id} value={assigned.id} />)
+                )
+            }
+          </Picker>
           </View>
 
           <Text note>Price/amount</Text>
@@ -271,4 +296,4 @@ setShop(removing,shop){
   }
 }
 
-export default withShops(withApollo(EditItem));
+export default withUsers(withShops(withApollo(EditItem)));

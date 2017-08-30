@@ -12,7 +12,7 @@ export const shops = gql`
 `;
 
 export const updateItem = gql`
-	mutation updateItem($name: String!,$priceQuantity: Float!,$note: String,$quantity: Int!,$id: ID!, $shopsIds:[ID!]) {
+	mutation updateItem($name: String!,$priceQuantity: Float!,$note: String,$quantity: Int!,$id: ID!, $shopsIds:[ID!],$assignedId:ID) {
     updateItem(
       id: $id,
       name:$name,
@@ -20,6 +20,7 @@ export const updateItem = gql`
       quantity: $quantity,
       note: $note,
 			shopsIds:$shopsIds
+      assignedId:$assignedId
     ) {
       id
       }
@@ -46,4 +47,15 @@ export const shopsSubscription = gql`
 			}
 		}
 	}
+`;
+
+export const users = gql`
+  query allUsers {
+       allUsers (orderBy: userName_ASC) {
+		id
+		key:id
+    email
+    userName
+	 }
+  }
 `;

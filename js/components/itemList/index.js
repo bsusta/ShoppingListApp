@@ -63,6 +63,11 @@ class ItemListLoader extends Component {
                done
                name
                note
+               assigned{
+                 id
+                 userName
+                 email
+               }
                priceQuantity
                quantity
                shops{

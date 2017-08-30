@@ -166,7 +166,7 @@ class ItemList extends Component {
                   <View style={{paddingLeft:10}}>
                     <Text>{item.name}</Text>
                     <Text numberOfLines={1} note>Quantity: {item.quantity}</Text>
-                    <Text numberOfLines={1} note>Price/stock: {item.priceQuantity}</Text>
+                    <Text numberOfLines={1} note>Assigned: {item.assigned?(item.assigned.userName?item.assigned.userName:item.assigned.email):'Nepriradené'}</Text>
                   </View>
                 </TouchableHighlight>
                 </Body>
