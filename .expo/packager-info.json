@@ -1,17 +1,8 @@
 {
-<<<<<<< HEAD
-  "expoServerPort": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
-  "packagerPort": null,
-  "packagerPid": null
-=======
   "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://mq-8x2.ladislavbili.shoppinglistapp.exp.direct",
-  "packagerNgrokUrl": "https://packager.mq-8x2.ladislavbili.shoppinglistapp.exp.direct",
-  "ngrokPid": 5200,
+  "expoServerNgrokUrl": "https://mq-8x2.bsusta.shoppinglistapp.exp.direct",
+  "packagerNgrokUrl": "https://packager.mq-8x2.bsusta.shoppinglistapp.exp.direct",
+  "ngrokPid": 10164,
   "packagerPort": 19001,
-  "packagerPid": 8544
->>>>>>> 1743e20732895d2e5001e2f238c23526b5788ef8
+  "packagerPid": 10152
 }

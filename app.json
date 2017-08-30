@@ -1,15 +1,14 @@
-  {
-   "expo": {
-    "name": "ShopingListApp",
-    "icon": "",
-    "version": "1.0.1",
-    "slug": "shoping-list-app",
-    "sdkVersion": "19.0.0",
-    "ios": {
-      "bundleIdentifier": "com.yourcompany.yourappname"
-    },
-    "android": {
-      "package": "sk.lansystems.ShopingListApp"
-    }
+{
+  "expo": {
+   "name": "ShopinListApp",
+   "version": "1.0.0",
+   "slug": "",
+   "sdkVersion": "19.0.0",
+   "ios": {
+     "bundleIdentifier": "com.lansystems.shopinglistapp"
+   },
+   "android": {
+     "package": "com.yourcompany.shopinglistapp"
    }
- }
+  }
+}

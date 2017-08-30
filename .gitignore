@@ -61,3 +61,8 @@ ios
 .expo/packager-info.json
 .expo/settings.json
 .expo/packager-info.json
+.expo/settings.json
+app.json
+package-lock.json
+yarn.lock
+.expo/packager-info.json
